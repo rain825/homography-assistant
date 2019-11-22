@@ -805,7 +805,7 @@
   resolved "https://registry.npm.taobao.org/@types/minimatch/download/@types/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha1-PcoOPzOyAPx9ETnAzZbBJoyt/Z0=
 
-"@types/node@*":
+"@types/node@*", "@types/node@>6":
   version "12.12.11"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.11.tgz?cache=0&sync_timestamp=1574192882723&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.11.tgz#bec2961975888d964196bf0016a2f984d793d3ce"
   integrity sha1-vsKWGXWIjZZBlr8AFqL5hNeT084=
@@ -5247,7 +5247,7 @@ mz@^2.4.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-nan@^2.12.1:
+nan@^2.12.1, nan@^2.13.2, nan@^2.14.0:
   version "2.14.0"
   resolved "https://registry.npm.taobao.org/nan/download/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha1-eBj3IgJ7JFmobwKV1DTR/CM2xSw=
@@ -5268,6 +5268,13 @@ nanomatch@^1.2.9:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+native-node-utils@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/native-node-utils/-/native-node-utils-0.2.7.tgz#dbf7fca4cfee579585d5e04d4564749bd56534a3"
+  integrity sha512-61v0G3uVxWlXHppSZGwZi+ZEIgGUKI8QvEkEJLb1GVePI7P8SBe+G747z+QMXSt4TxfgbVZP0DyobbRKYVIjdw==
+  dependencies:
+    nan "^2.13.2"
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -5453,7 +5460,7 @@ npm-run-path@^4.0.0:
   dependencies:
     path-key "^3.0.0"
 
-npmlog@^4.0.2:
+npmlog@^4.0.2, npmlog@^4.1.2:
   version "4.1.2"
   resolved "https://registry.npm.taobao.org/npmlog/download/npmlog-4.1.2.tgz#08a7f2a8bf734604779a9efa4ad5cc717abb954b"
   integrity sha1-CKfyqL9zRgR3mp76StXMcXq7lUs=
@@ -5605,6 +5612,25 @@ open@^6.3.0:
   integrity sha1-XBPpbQ3IlGhhZPGJZez+iJ7PyKk=
   dependencies:
     is-wsl "^1.1.0"
+
+opencv-build@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/opencv-build/-/opencv-build-0.1.9.tgz#e10f08c4fbfd674ffd498214420883530483cbf9"
+  integrity sha512-tgT/bnJAcYROen9yaPynfK98IMl62mPSgMLmTx41911m5bczlq21xtE5r+UWLB/xEo/0hKk6tl5zHyxV/JS5Rg==
+  dependencies:
+    npmlog "^4.1.2"
+
+opencv4nodejs@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/opencv4nodejs/-/opencv4nodejs-5.5.0.tgz#3a6f8954293baefd2df16a8274807a8c3166612e"
+  integrity sha512-coQ/XuQnWh5ew7LhUYbAMXTHo3wEya/4nlDi99l+w/kk1uHw8nWy2OptVI74IxIlYQKKqNy4pv2DdMY0vheA/g==
+  dependencies:
+    nan "^2.14.0"
+    native-node-utils "^0.2.7"
+    npmlog "^4.1.2"
+    opencv-build "^0.1.9"
+  optionalDependencies:
+    "@types/node" ">6"
 
 opener@^1.5.1:
   version "1.5.1"
