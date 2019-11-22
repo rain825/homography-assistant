@@ -1,24 +1,49 @@
 # homography-assistant
 
-## Project setup
-```
-yarn install
+
+## Requirements
+
+- Node.js
+- yarn
+  ```bash
+  npm install -g yarn
+  ```
+- Python ( `>3.6` )
+
+## Set-Up
+
+### Frontend
+```bash
+cd frontend
+yarn 
 ```
 
-### Compiles and hot-reloads for development
+### Backend
+```bash
+cd Backend
+pip3 install -r requirements.txt
 ```
+
+## Run App
+
+1. Exec following `Frontend` and `Backend`
+2. Open `http://localhost:8080` in browser
+
+### Frontend
+```bash
+cd frontend
 yarn serve
 ```
 
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
+### Backend
+```bash
+cd backend
+python3 app.py
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Author
+- popunbom <fantom0779@gmail.com>
+
+## LICENSE
+
+MIT
