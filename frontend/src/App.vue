@@ -1,19 +1,22 @@
 <template>
   <div id="app">
-    <Canvas />
-    <Canvas />
+    <div>
+      <Canvas />
+      <Canvas />
+    </div>
+    <ApiCall />
   </div>
 </template>
 
 <script>
 import Canvas from "./components/Canvas";
-
-const cv = require("opencv4nodejs");
+import ApiCall from "./components/ApiCall";
 
 export default {
   name: "app",
   components: {
-    Canvas
+    Canvas,
+    ApiCall
   }
 };
 </script>

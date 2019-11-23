@@ -1,11 +1,11 @@
 <template>
   <div>
-    <button @click="handleClick">Push !</button>
+    <button @click="handleClick">Convert</button>
   </div>
 </template>
 
 <script>
-import axios from "axios"
+import axios from "axios";
 
 export default {
   methods: {
@@ -13,8 +13,8 @@ export default {
       axios
         .get("/api")
         .then(resp => alert(resp.data))
-        .catch(error => alert("error"))
-    },
-  },
-}
+        .catch(error => alert("error"));
+    }
+  }
+};
 </script>
