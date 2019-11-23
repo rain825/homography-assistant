@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
+import json
 
 app = Flask(
     __name__,
@@ -18,7 +19,8 @@ def api_endpoint():
         if request.method == "GET":
             return "びゅー"
         elif request.method == "POST":
-            print("data:", request.get_data())
+            data = request.get_json()
+            print(data)
             return "post"
     except Exception as e:
         return str(e)
