@@ -11,7 +11,7 @@ export default {
   methods: {
     handleClick() {
       axios
-        .get("/api")
+        .post("/api")
         .then(resp => alert(resp.data))
         .catch(error => alert("error"));
     }
