@@ -2,6 +2,9 @@
 # Created by https://www.gitignore.io/api/vue,node,vuejs,macos,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=vue,node,vuejs,macos,visualstudiocode
 
+### Project Specified ####
+test.*
+
 ### macOS ###
 # General
 .DS_Store
