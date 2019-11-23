@@ -16,7 +16,7 @@ export default {
     img: {
       type: Image,
       default: () => {
-        new Image();
+        return new Image();
       }
     }
   },

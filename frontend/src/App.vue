@@ -1,11 +1,14 @@
 <template>
   <div id="app">
     <Canvas />
+    <Canvas />
   </div>
 </template>
 
 <script>
 import Canvas from "./components/Canvas";
+
+const cv = require("opencv4nodejs");
 
 export default {
   name: "app",

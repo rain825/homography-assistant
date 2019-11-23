@@ -10,5 +10,15 @@ module.exports = {
         target: "http://localhost:5050"
       }
     }
+  },
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.node$/,
+          use: 'node-loader'
+        }
+      ]
+    }
   }
 }
