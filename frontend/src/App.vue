@@ -1,22 +1,18 @@
 <template>
   <div id="app">
-    <ApiTest />
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Hello, Flask × vue-cli" />
+    <Canvas />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue"
-import ApiTest from "./components/ApiTest"
+import Canvas from "./components/Canvas";
 
 export default {
   name: "app",
   components: {
-    HelloWorld,
-    ApiTest,
-  },
-}
+    Canvas
+  }
+};
 </script>
 
 <style>
