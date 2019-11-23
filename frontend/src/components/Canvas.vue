@@ -12,6 +12,12 @@ export default {
     canvasHeight: {
       type: Number,
       default: 500
+    },
+    img: {
+      type: Image,
+      default: () => {
+        new Image();
+      }
     }
   },
   mounted() {
@@ -41,12 +47,12 @@ export default {
       let ctx = this.ctx;
       let canvasWidth = this.canvasWidth;
       let canvasHeight = this.canvasHeight;
+      let img = this.img;
 
       // ファイル読み込み
       let fileReader = new FileReader();
       // 読み込み完了時にキャンバス描画
       fileReader.onload = function(e) {
-        let img = new Image();
         img.onload = function() {
           // 描画サイズを計算
           let drawCanvasWidth, drawCanvasHeight;
