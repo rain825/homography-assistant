@@ -15,16 +15,20 @@
           @mouseenter="handleImageMouseEnter"
           @mouseleave="handleImageMouseLeave"
         ></v-image>
+        <v-circle :config="circleConfig"></v-circle>
       </v-layer>
     </v-stage>
   </div>
 </template>
 
 <script>
+import { calcScale } from "@/utils/scaling.js"
+
 export default {
   data() {
     return {
       isMounted: false,
+      markerScale: 1.0,
       imgConfig: {
         image: this.image,
       },
@@ -59,7 +63,7 @@ export default {
       return this.isMounted ? this.$refs.image.getStage() : undefined
     },
     stageConfig() {
-      const scale = this.scaling
+      const scale = this.calcScaling
       return {
         width: scale.size.canvas.width,
         height: scale.size.canvas.height,
@@ -67,7 +71,7 @@ export default {
       }
     },
     layerConfig() {
-      const scale = this.scaling
+      const scale = this.calcScaling
       return {
         width: scale.size.image.native.width,
         height: scale.size.image.native.height,
@@ -78,70 +82,38 @@ export default {
         draggable: true,
       }
     },
-    scaling() {
-      const basedOnWidth = (width, image) => {
-        const ratio = width / image.naturalWidth
-        console.log(`Ratio: ${ratio}`)
-        return {
-          ratio: ratio,
-          size: {
-            image: {
-              native: {
-                width: image.naturalWidth,
-                height: image.naturalHeight,
-              },
-              scaled: {
-                x: image.naturalWidth * ratio,
-                y: image.naturalHeight * ratio,
-              },
-            },
-            canvas: {
-              width: width,
-              height: image.naturalHeight * ratio,
-            },
-          },
-        }
+    circleConfig() {
+      return {
+        x: 0,
+        y: 0,
+        scale: {
+          x: this.markerScale,
+          y: this.markerScale,
+        },
+        radius: 15,
+        fill: "red",
+        stroke: "black",
+        strokeWidth: 3,
+        draggable: true,
       }
-      const basedOnHeight = (height, image) => {
-        const ratio = height / image.naturalHeight
-        console.log(`Ratio: ${ratio}`)
-        return {
-          ratio: ratio,
-          size: {
-            image: {
-              native: {
-                width: image.naturalWidth,
-                height: image.naturalHeight,
-              },
-              scaled: {
-                x: image.naturalWidth * ratio,
-                y: image.naturalHeight * ratio,
-              },
-            },
-            canvas: {
-              width: image.naturalWidth * ratio,
-              height: height,
-            },
-          },
-        }
-      }
-
+    },
+    calcScaling() {
       if (this.width !== undefined && this.height !== undefined) {
         if (this.width >= this.height) {
-          return basedOnWidth(this.width, this.image)
+          return calcScale.basedOnWidth(this.width, this.image)
         } else {
-          return basedOnHeight(this.height, this.image)
+          return calcScale.basedOnHeight(this.height, this.image)
         }
       } else {
         if (this.width !== undefined) {
-          return basedOnWidth(this.width, this.image)
+          return calcScale.basedOnWidth(this.width, this.image)
         } else {
-          return basedOnHeight(this.height, this.image)
+          return calcScale.basedOnHeight(this.height, this.image)
         }
       }
     },
     stageStyle() {
-      const scale = this.scaling
+      const scale = this.calcScaling
       return {
         width: `${parseInt(scale.size.canvas.width)}px`,
         height: `${parseInt(scale.size.canvas.height)}px`,
@@ -149,48 +121,20 @@ export default {
     },
   },
   methods: {
-    handleMouseMove() {
-      const cursorPos = this.kStage.getPointerPosition()
-      const stagePos = this.kStage.position()
-      const layerPos = this.kLayer.position()
-      const layerScale = this.kLayer.scaleX()
-
-      const fixedLayerPos = {
-        x: stagePos.x + layerPos.x,
-        y: stagePos.y + layerPos.y,
-      }
-
-      const pos = {
-        x: (cursorPos.x - fixedLayerPos.x) / layerScale,
-        y: (cursorPos.y - fixedLayerPos.y) / layerScale,
-      }
-
-      // const scaledPos = {
-      //   x: pos.x / layerScale, // stageScale,
-      //   y: pos.y / layerScale, // stageScale,
-      // }
-
-      console.debug(`pos: ${JSON.stringify(pos)}`)
-    },
-    handleWheel(event) {
-      const scaleBy = 1.2
-      const deltaY = event.evt.deltaY
-
-      // const prevScale = this.kStage.scaleX()
-      const prevScale = this.kLayer.scaleX()
+    cursorCenteredScaling(wheelDelta, scaleBy) {
+      const prevScale = this.kStage.scaleX()
       const prevCursor = this.kStage.getPointerPosition()
       const prevPosition = this.kStage.position()
-      event.evt.preventDefault()
 
       const mousePointTo = {
         x: prevCursor.x / prevScale - prevPosition.x / prevScale,
         y: prevCursor.y / prevScale - prevPosition.y / prevScale,
       }
 
-      const newScale = deltaY > 0 ? prevScale * scaleBy : prevScale / scaleBy
+      const newScale =
+        wheelDelta > 0 ? prevScale * scaleBy : prevScale / scaleBy
 
-      // this.kStage.scale({ x: newScale, y: newScale })
-      this.kLayer.scale({ x: newScale, y: newScale })
+      this.kStage.scale({ x: newScale, y: newScale })
 
       const newCursor = this.kStage.getPointerPosition()
 
@@ -199,6 +143,34 @@ export default {
         y: -(mousePointTo.y - newCursor.y / newScale) * newScale,
       }
       this.kStage.position(newPos)
+    },
+    handleMouseMove() {
+      const cursorPos = this.kStage.getPointerPosition()
+      const stagePos = this.kStage.position()
+      const layerPos = this.kLayer.position()
+      const layerScale = this.kLayer.scaleX()
+      const stageScale = this.kStage.scaleX()
+
+      const fixedLayerPos = {
+        x: stagePos.x + layerPos.x,
+        y: stagePos.y + layerPos.y,
+      }
+
+      const fixedCursorPos = {
+        x: (cursorPos.x - fixedLayerPos.x) / layerScale,
+        y: (cursorPos.y - fixedLayerPos.y) / layerScale,
+      }
+      console.debug(`layerScale: ${layerScale}`)
+      console.debug(`stageScale: ${stageScale}`)
+      console.debug(`fixedCursorPos: ${JSON.stringify(fixedCursorPos)}`)
+    },
+    handleWheel(event) {
+      const scaleBy = 1.2
+      event.evt.preventDefault()
+      this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
+
+      this.markerScale = 1 / this.kStage.scaleX()
+
       this.kStage.batchDraw()
     },
     handleImageMouseEnter() {

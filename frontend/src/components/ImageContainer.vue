@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import FileUploader from "./FileUploader.vue"
+import FileUploader from "./FileUploader"
 import ImageCanvas from "./ImageCanvas.vue"
 
 export default {
