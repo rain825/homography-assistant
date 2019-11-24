@@ -14,6 +14,7 @@
           ref="image"
           @mouseenter="handleImageMouseEnter"
           @mouseleave="handleImageMouseLeave"
+          @click="handleImageClick"
         ></v-image>
         <v-circle :config="circleConfig"></v-circle>
       </v-layer>
@@ -178,6 +179,24 @@ export default {
     },
     handleImageMouseLeave() {
       this.isCursorOnImage = false
+    },
+    handleImageClick() {
+      const cursorPos = this.kStage.getPointerPosition()
+      const stagePos = this.kStage.position()
+      const layerPos = this.kLayer.position()
+      const layerScale = this.kLayer.scaleX()
+      const stageScale = this.kStage.scaleX()
+
+      const fixedLayerPos = {
+        x: stagePos.x + layerPos.x,
+        y: stagePos.y + layerPos.y,
+      }
+
+      const fixedCursorPos = {
+        x: (cursorPos.x - fixedLayerPos.x) / layerScale,
+        y: (cursorPos.y - fixedLayerPos.y) / layerScale,
+      }
+      console.log(`click:  ${JSON.stringify(fixedCursorPos)}`)
     },
   },
 }
