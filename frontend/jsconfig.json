@@ -3,10 +3,16 @@
     "./src/**/*"
   ],
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "",
     "module": "es2015",
     "moduleResolution": "node",
-    "target": "es5",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true
+    "target": "es5"
   }
 }

@@ -9,4 +9,7 @@
       "autoFix": true
     }
   ],
+  "path-intellisense.mappings": {
+    "@": "${workspaceRoot}/frontend/src",
+},
 }
