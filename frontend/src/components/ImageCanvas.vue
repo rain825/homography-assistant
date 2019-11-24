@@ -16,15 +16,11 @@
           @mouseleave="handleImageMouseLeave"
           @click="handleImageClick"
         ></v-image>
-<<<<<<< HEAD
         <v-circle
           v-for="(circle, key, idx) in circles"
           :key="idx"
           v-bind:config="circle"
         ></v-circle>
-=======
-        <!-- <v-circle :config="circleConfig"></v-circle> -->
->>>>>>> frontend/impl-draggable-image
       </v-layer>
     </v-stage>
   </div>
@@ -143,6 +139,43 @@ export default {
       this.kStage.position(newPos)
     },
     handleMouseMove() {
+      const cursorPos = this.calCurrentCursorPosInImage()
+    },
+    handleWheel(event) {
+      const scaleBy = 1.2
+      event.evt.preventDefault()
+      this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
+
+      this.markerScale = 1 / this.kStage.scaleX()
+
+      this.kStage.batchDraw()
+    },
+    handleImageMouseEnter() {
+      this.isCursorOnImage = true
+    },
+    handleImageMouseLeave() {
+      this.isCursorOnImage = false
+    },
+    handleImageClick() {
+      const cursorPos = this.calCurrentCursorPosInImage()
+      this.circles.push(this.getCircleConfig(cursorPos))
+    },
+    getCircleConfig(pos) {
+      return {
+        x: pos.x,
+        y: pos.y,
+        scale: {
+          x: 1,
+          y: 1,
+        },
+        radius: 15,
+        fill: "red",
+        stroke: "black",
+        strokeWidth: 3,
+        draggable: true,
+      }
+    },
+    calCurrentCursorPosInImage() {
       const cursorPos = this.kStage.getPointerPosition()
       const stagePos = this.kStage.position()
       const layerPos = this.kLayer.position()
@@ -163,70 +196,8 @@ export default {
         x: cursorPos.x * scale.x - fixedLayerPos.x,
         y: cursorPos.y * scale.y - fixedLayerPos.y,
       }
-      console.debug(`layerScale: ${JSON.stringify(layerScale)}`)
-      console.debug(`stageScale: ${JSON.stringify(stageScale)}`)
-      console.debug(`stagePos: ${JSON.stringify(stagePos)}`)
-      console.debug(`layerPos: ${JSON.stringify(layerPos)}`)
-      console.debug(`scale: ${JSON.stringify(scale)}`)
-      console.debug(`cursorPos: ${JSON.stringify(cursorPos)}`)
-      console.debug(`fixedLayerPos: ${JSON.stringify(fixedLayerPos)}`)
-      console.debug(`fixedCursorPos: ${JSON.stringify(fixedCursorPos)}`)
-    },
-    handleWheel(event) {
-      const scaleBy = 1.2
-      event.evt.preventDefault()
-      this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
 
-      this.markerScale = 1 / this.kStage.scaleX()
-
-      this.kStage.batchDraw()
-    },
-    handleImageMouseEnter() {
-      this.isCursorOnImage = true
-    },
-    handleImageMouseLeave() {
-      this.isCursorOnImage = false
-    },
-    handleImageClick() {
-      const cursorPos = this.kStage.getPointerPosition()
-      const stagePos = this.kStage.position()
-      const layerPos = this.kLayer.position()
-      const layerScale = this.kLayer.scaleX()
-      const stageScale = this.kStage.scaleX()
-
-      const fixedLayerPos = {
-        x: stagePos.x + layerPos.x,
-        y: stagePos.y + layerPos.y,
-      }
-
-      const fixedCursorPos = {
-        x: (cursorPos.x - fixedLayerPos.x) / layerScale,
-        y: (cursorPos.y - fixedLayerPos.y) / layerScale,
-      }
-
-      const scale = this.calcScaling
-
-      this.circles.push(this.circleConfig())
-      console.debug(
-        `clicked : ${JSON.stringify(fixedCursorPos)}, ${JSON.stringify(
-          fixedLayerPos
-        )}, ${JSON.stringify(scale)}`
-      )
-    },
-    circleConfig() {
-      return {
-        x: 1800,
-        y: 1200,
-        scale: {
-          x: 1,
-          y: 1,
-        },
-        radius: 15,
-        fill: "red",
-        stroke: "black",
-        strokeWidth: 3,
-        draggable: true,
-      }
+      return fixedCursorPos
     },
   },
 }
