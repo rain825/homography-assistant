@@ -15,7 +15,7 @@
           @mouseenter="handleImageMouseEnter"
           @mouseleave="handleImageMouseLeave"
         ></v-image>
-        <v-circle :config="circleConfig"></v-circle>
+        <!-- <v-circle :config="circleConfig"></v-circle> -->
       </v-layer>
     </v-stage>
   </div>
@@ -67,18 +67,21 @@ export default {
       return {
         width: scale.size.canvas.width,
         height: scale.size.canvas.height,
-        scale: { x: 1, y: 1 },
+        scale: {
+          x: scale.ratio,
+          y: scale.ratio,
+        },
       }
     },
     layerConfig() {
       const scale = this.calcScaling
       return {
-        width: scale.size.image.native.width,
-        height: scale.size.image.native.height,
-        scale: {
-          x: scale.ratio,
-          y: scale.ratio,
-        },
+        // width: scale.size.image.native.width,
+        // height: scale.size.image.native.height,
+        // scale: {
+        //   x: scale.ratio,
+        //   y: scale.ratio,
+        // },
         draggable: true,
       }
     },
@@ -148,20 +151,30 @@ export default {
       const cursorPos = this.kStage.getPointerPosition()
       const stagePos = this.kStage.position()
       const layerPos = this.kLayer.position()
-      const layerScale = this.kLayer.scaleX()
-      const stageScale = this.kStage.scaleX()
+      const layerScale = this.kLayer.scale()
+      const stageScale = this.kStage.scale()
+
+      const scale = {
+        x: layerScale.x / stageScale.x,
+        y: layerScale.y / stageScale.y,
+      }
 
       const fixedLayerPos = {
-        x: stagePos.x + layerPos.x,
-        y: stagePos.y + layerPos.y,
+        x: stagePos.x / stageScale.x + layerPos.x / layerScale.x,
+        y: stagePos.y / stageScale.y + layerPos.y / layerScale.y,
       }
 
       const fixedCursorPos = {
-        x: (cursorPos.x - fixedLayerPos.x) / layerScale,
-        y: (cursorPos.y - fixedLayerPos.y) / layerScale,
+        x: cursorPos.x * scale.x - fixedLayerPos.x,
+        y: cursorPos.y * scale.y - fixedLayerPos.y,
       }
-      console.debug(`layerScale: ${layerScale}`)
-      console.debug(`stageScale: ${stageScale}`)
+      console.debug(`layerScale: ${JSON.stringify(layerScale)}`)
+      console.debug(`stageScale: ${JSON.stringify(stageScale)}`)
+      console.debug(`stagePos: ${JSON.stringify(stagePos)}`)
+      console.debug(`layerPos: ${JSON.stringify(layerPos)}`)
+      console.debug(`scale: ${JSON.stringify(scale)}`)
+      console.debug(`cursorPos: ${JSON.stringify(cursorPos)}`)
+      console.debug(`fixedLayerPos: ${JSON.stringify(fixedLayerPos)}`)
       console.debug(`fixedCursorPos: ${JSON.stringify(fixedCursorPos)}`)
     },
     handleWheel(event) {
