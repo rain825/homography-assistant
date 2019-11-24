@@ -88,21 +88,6 @@ export default {
         draggable: true,
       }
     },
-    circleConfig() {
-      return {
-        x: 0,
-        y: 0,
-        scale: {
-          x: this.markerScale,
-          y: this.markerScale,
-        },
-        radius: 15,
-        fill: "red",
-        stroke: "black",
-        strokeWidth: 3,
-        draggable: true,
-      }
-    },
     calcScaling() {
       if (this.width !== undefined && this.height !== undefined) {
         if (this.width >= this.height) {
@@ -201,8 +186,30 @@ export default {
         x: (cursorPos.x - fixedLayerPos.x) / layerScale,
         y: (cursorPos.y - fixedLayerPos.y) / layerScale,
       }
-      this.circles.push(this.circleConfig)
-      console.log(`click:  ${JSON.stringify(fixedCursorPos)}`)
+
+      const scale = this.calcScaling
+
+      this.circles.push(this.circleConfig())
+      console.debug(
+        `clicked : ${JSON.stringify(fixedCursorPos)}, ${JSON.stringify(
+          fixedLayerPos
+        )}, ${JSON.stringify(scale)}`
+      )
+    },
+    circleConfig() {
+      return {
+        x: 1800,
+        y: 1200,
+        scale: {
+          x: 1,
+          y: 1,
+        },
+        radius: 15,
+        fill: "red",
+        stroke: "black",
+        strokeWidth: 3,
+        draggable: true,
+      }
     },
   },
 }
