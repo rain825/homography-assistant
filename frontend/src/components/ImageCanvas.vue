@@ -39,6 +39,18 @@ export default {
       },
       isCursorOnImage: false,
       circles: [],
+      colorList: [
+        "cyan",
+        "blue",
+        "magenta",
+        "maroon",
+        "lime",
+        "red",
+        "yellow",
+        "green",
+        "navy",
+        "orange",
+      ],
     }
   },
   props: {
@@ -161,6 +173,7 @@ export default {
       this.circles.push(this.getCircleConfig(cursorPos))
     },
     getCircleConfig(pos) {
+      const colorNum = this.circles.length % this.colorList.length
       return {
         x: pos.x,
         y: pos.y,
@@ -169,7 +182,7 @@ export default {
           y: 1,
         },
         radius: 15,
-        fill: "red",
+        fill: this.colorList[colorNum],
         stroke: "black",
         strokeWidth: 3,
         draggable: true,
