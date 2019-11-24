@@ -16,7 +16,11 @@
           @mouseleave="handleImageMouseLeave"
           @click="handleImageClick"
         ></v-image>
-        <v-circle :config="circleConfig"></v-circle>
+        <v-circle
+          v-for="(circle, key, idx) in circles"
+          :key="idx"
+          v-bind:config="circle"
+        ></v-circle>
       </v-layer>
     </v-stage>
   </div>
@@ -34,6 +38,7 @@ export default {
         image: this.image,
       },
       isCursorOnImage: false,
+      circles: [],
     }
   },
   props: {
@@ -196,6 +201,7 @@ export default {
         x: (cursorPos.x - fixedLayerPos.x) / layerScale,
         y: (cursorPos.y - fixedLayerPos.y) / layerScale,
       }
+      this.circles.push(this.circleConfig)
       console.log(`click:  ${JSON.stringify(fixedCursorPos)}`)
     },
   },
