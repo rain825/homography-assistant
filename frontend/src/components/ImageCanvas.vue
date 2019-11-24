@@ -94,12 +94,6 @@ export default {
     layerConfig() {
       const scale = this.calcScaling
       return {
-        // width: scale.size.image.native.width,
-        // height: scale.size.image.native.height,
-        // scale: {
-        //   x: scale.ratio,
-        //   y: scale.ratio,
-        // },
         draggable: true,
       }
     },
