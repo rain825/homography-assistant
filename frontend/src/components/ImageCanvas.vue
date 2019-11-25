@@ -16,11 +16,7 @@
           @mouseleave="handleImageMouseLeave"
           @click="handleImageClick"
         ></v-image>
-        <v-circle
-          v-for="(circle, key, idx) in circles"
-          :key="idx"
-          v-bind:config="circle"
-        ></v-circle>
+        <Circles :circles="circles" />
       </v-layer>
     </v-stage>
   </div>
@@ -28,8 +24,12 @@
 
 <script>
 import { calcScale } from "@/utils/scaling.js"
+import Circles from "./Circle"
 
 export default {
+  components: {
+    Circles,
+  },
   data() {
     return {
       isMounted: false,
