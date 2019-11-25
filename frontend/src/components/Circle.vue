@@ -4,7 +4,8 @@
       v-for="(circle, idx) in circles"
       :key="idx"
       v-bind:config="circle"
-      :id="idx"
+      :idx="idx"
+      @mouseup="handleMouseUp"
     ></v-circle>
   </div>
 </template>
@@ -15,6 +16,12 @@ export default {
     circles: {
       type: Array,
       required: true,
+    },
+  },
+  mounted() {},
+  methods: {
+    handleMouseUp(e) {
+      console.debug(`mouse up:  ${JSON.stringify(e.target.attrs.idx)}`)
     },
   },
 }
