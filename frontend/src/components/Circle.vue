@@ -20,8 +20,13 @@ export default {
   },
   mounted() {},
   methods: {
-    handleMouseUp(e) {
-      console.debug(`mouse up:  ${JSON.stringify(e.target.attrs.idx)}`)
+    handleMouseUp(event) {
+      // console.debug(`circle drag:  ${JSON.stringify(event.target.attrs.idx)}`)
+      this.$emit("circlemove", {
+        idx: event.target.attrs.idx,
+        x: event.target.attrs.x,
+        y: event.target.attrs.y,
+      })
     },
   },
 }

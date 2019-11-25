@@ -16,7 +16,7 @@
           @mouseleave="handleImageMouseLeave"
           @click="handleImageClick"
         ></v-image>
-        <Circles :circles="circles" />
+        <Circles :circles="circles" @circlemove="handleCircleMove" />
       </v-layer>
     </v-stage>
   </div>
@@ -211,6 +211,11 @@ export default {
       }
 
       return fixedCursorPos
+    },
+    handleCircleMove(info) {
+      console.debug(`circle drag event: ${JSON.stringify(info)}`)
+      this.circles[info.idx].x = info.x
+      this.circles[info.idx].y = info.y
     },
   },
 }
