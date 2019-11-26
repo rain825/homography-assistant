@@ -1,28 +1,26 @@
 <template>
-  <v-circle :config="config" @mouseup="handleMouseUp"></v-circle>
+  <v-group :config="groupConfig" @mouseup="handleMouseUp">
+    <v-circle :config="circleConfig"> </v-circle>
+    <v-text :config="textConfig"></v-text>
+  </v-group>
 </template>
 
 <script>
 export default {
   props: {
-    id: {
-      type: [String, Number],
+    idx: {
+      type: Number,
       required: true,
-      validator: value => {
-        if (typeof value == "string") {
-          value = parseInt(value)
-        }
-        return Number.isInteger(value)
-      },
     },
     pos: {
       type: Object,
       required: true,
-      validator: value => "x" in value && "y" in value,
+      validator: pos => "x" in pos && "y" in pos,
     },
     color: {
-      type: String,
+      type: Object,
       required: true,
+      validator: color => "fg" in color && "bg" in color,
     },
     scale: {
       type: Number,
@@ -35,42 +33,81 @@ export default {
   },
   data() {
     return {
-      commonConfig: {
-        scale: {
-          x: 1,
-          y: 1,
+      baseConfig: {
+        circle: {
+          scale: {
+            x: 1,
+            y: 1,
+          },
+          radius: 12,
+          strokeWidth: 3,
         },
-        radius: 10,
-        stroke: "black",
-        strokeWidth: 3,
-        draggable: true,
+        text: {
+          fontSize: 15,
+        },
       },
     }
   },
   computed: {
-    scaledRadius() {
+    scaledCircleConfig() {
       const scale = this.scale || 1.0
-      const base = this.commonConfig
+      const base = this.baseConfig.circle
       return {
         radius: base.radius * scale,
         strokeWidth: base.strokeWidth * scale,
       }
     },
-    config() {
+    scaledTextConfig() {
+      const scale = this.scale || 1.0
+      const base = this.baseConfig.text
+
+      const scaledRadius = this.scaledCircleConfig.radius
+
       return {
-        ...this.commonConfig,
-        ...this.scaledRadius,
+        fontSize: base.fontSize * scale,
+        x: -(scaledRadius * 0.4),
+        y: -(scaledRadius * 0.5),
+      }
+    },
+    circleConfig() {
+      return {
+        ...this.baseConfig.circle,
+        ...this.scaledCircleConfig,
         ...this.overrideConfig,
+        fill: this.color.bg,
+        stroke: this.color.fg,
+      }
+    },
+    groupConfig() {
+      return {
+        foo: "bar",
+        draggable: true,
         ...this.pos,
-        fill: this.color,
+      }
+    },
+    textConfig() {
+      return {
+        text: `${this.$vnode.key}`,
+        fill: this.color.fg,
+        ...this.scaledTextConfig,
       }
     },
   },
   methods: {
     handleMouseUp(event) {
-      const id = this.id
-      const { x, y } = event.target.attrs
-      this.$emit("drag", id, { x, y })
+      const idx = this.idx
+      // const { x, y } = event.target.attrs
+      const { x, y } = event.currentTarget.position()
+
+      console.debug(event)
+
+      console.log(
+        `DragPoint <idx=${idx}, color=${JSON.stringify(
+          this.color
+        )}, pos=(${x}, ${y})`
+      )
+
+      this.$emit("drag", idx, { x, y })
     },
   },
 }
