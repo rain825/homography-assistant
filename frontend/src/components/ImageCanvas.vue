@@ -5,7 +5,6 @@
       :style="stageStyle"
       :config="stageConfig"
       @wheel="handleWheel"
-      @mousemove="handleMouseMove"
       ref="stage"
     >
       <v-layer :config="layerConfig" ref="layer">
@@ -16,11 +15,15 @@
           @mouseleave="handleImageMouseLeave"
           @click="handleImageClick"
         ></v-image>
-        <v-circle
-          v-for="(circle, key, idx) in circles"
-          :key="idx"
-          v-bind:config="circle"
-        ></v-circle>
+
+        <Point
+          v-for="(point, index) in points"
+          :id="index"
+          :key="index"
+          :pos="point.pos"
+          :color="point.color"
+          @drag="handlePointDrag"
+        ></Point>
       </v-layer>
     </v-stage>
   </div>
@@ -28,17 +31,24 @@
 
 <script>
 import { calcScale } from "@/utils/scaling.js"
+import Point from "./Point"
 
 export default {
+  components: {
+    Point,
+  },
   data() {
     return {
       isMounted: false,
-      markerScale: 1.0,
+      PointScale: 1.0,
+      layerConfig: {
+        draggable: true,
+      },
       imgConfig: {
         image: this.image,
       },
       isCursorOnImage: false,
-      circles: [],
+      points: [],
       colorList: [
         "cyan",
         "blue",
@@ -91,12 +101,6 @@ export default {
         },
       }
     },
-    layerConfig() {
-      const scale = this.calcScaling
-      return {
-        draggable: true,
-      }
-    },
     calcScaling() {
       if (this.width !== undefined && this.height !== undefined) {
         if (this.width >= this.height) {
@@ -144,15 +148,12 @@ export default {
       }
       this.kStage.position(newPos)
     },
-    handleMouseMove() {
-      const cursorPos = this.calCurrentCursorPosInImage()
-    },
     handleWheel(event) {
       const scaleBy = 1.2
       event.evt.preventDefault()
       this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
 
-      this.markerScale = 1 / this.kStage.scaleX()
+      this.PointScale = 1 / this.kStage.scaleX()
 
       this.kStage.batchDraw()
     },
@@ -164,23 +165,11 @@ export default {
     },
     handleImageClick() {
       const cursorPos = this.calCurrentCursorPosInImage()
-      this.circles.push(this.getCircleConfig(cursorPos))
-    },
-    getCircleConfig(pos) {
-      const colorNum = this.circles.length % this.colorList.length
-      return {
-        x: pos.x,
-        y: pos.y,
-        scale: {
-          x: 1,
-          y: 1,
-        },
-        radius: 15,
-        fill: this.colorList[colorNum],
-        stroke: "black",
-        strokeWidth: 3,
-        draggable: true,
-      }
+      const colorNum = this.points.length % this.colorList.length
+      this.points.push({
+        pos: cursorPos,
+        color: this.colorList[colorNum],
+      })
     },
     calCurrentCursorPosInImage() {
       const cursorPos = this.kStage.getPointerPosition()
@@ -205,6 +194,17 @@ export default {
       }
 
       return fixedCursorPos
+    },
+    handlePointDrag(idx, newPos) {
+      const points = this.points
+
+      console.debug(
+        `handlePointDrag <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`
+      )
+      points[idx] = {
+        ...points[idx],
+        pos: newPos,
+      }
     },
   },
 }
