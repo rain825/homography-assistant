@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import chroma from "chroma-js"
 import ImageCanvas from "@/components/ImageCanvas.vue"
 import FileUploader from "@/components/FileUploader.vue"
 import DraggableList from "@/components/DraggableList.vue"
@@ -37,18 +38,6 @@ export default {
       uploadable: true,
       image: null,
       canvasWidth: null,
-      colorList: [
-        "cyan",
-        "blue",
-        "magenta",
-        "maroon",
-        "lime",
-        "red",
-        "yellow",
-        "green",
-        "navy",
-        "orange",
-      ],
       points: [],
     }
   },
@@ -56,16 +45,28 @@ export default {
     this.canvasWidth = this.$el.clientWidth
   },
   methods: {
+    generateRandomColor() {
+      const bg = chroma.random()
+      const fg =
+        chroma.contrast("white", bg) > chroma.contrast("black", bg)
+          ? chroma("white")
+          : chroma("black")
+
+      return {
+        bg: bg.hex(),
+        fg: fg.hex(),
+      }
+    },
     handleSubmit(image) {
       this.uploadable = false
       this.image = image
     },
     handleAddPoint(pos) {
       console.debug(`handleAddPoint <pos=${JSON.stringify(pos)}}>`)
-      const colorNum = this.points.length % this.colorList.length
       this.points.push({
+        id: this.points.length,
         pos: pos,
-        color: this.colorList[colorNum],
+        color: this.generateRandomColor(),
       })
     },
     handleDragPoint(idx, newPos) {
