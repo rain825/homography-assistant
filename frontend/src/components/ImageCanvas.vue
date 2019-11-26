@@ -1,5 +1,5 @@
 <template>
-  <div class="canvas-wrapper">
+  <div class="image-canvas">
     <v-stage
       class="stage"
       :style="stageStyle"
@@ -33,7 +33,7 @@
 import { calcScale } from "@/utils/scaling.js"
 import { pointsValidator } from "@/utils/validator"
 
-import Point from "./Point"
+import Point from "@/components/canvas/Point"
 
 export default {
   name: "ImageCanvas",
@@ -200,7 +200,7 @@ export default {
 </script>
 
 <style scoped>
-.canvas-wrapper {
+.image-canvas {
   position: relative;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <label :class="{ overlay: imageVisibility }" for="file">
+  <label :class="{ overlay: canvasVisible }" for="file">
     <div class="message">Click here to open image</div>
     <input
       @change="handleSubmit"
@@ -15,7 +15,7 @@
 <script>
 export default {
   props: {
-    imageVisibility: {
+    canvasVisible: {
       type: Boolean,
       required: true,
     },
