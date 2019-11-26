@@ -1,33 +1,43 @@
 <template>
   <div id="app">
-    <div>
-      <Canvas />
-      <Canvas />
+    <h1>homography-assistant</h1>
+    <div class="selector-wrapper">
+      <points-selector id="img-1" />
     </div>
-    <ApiCall />
   </div>
 </template>
 
 <script>
-import Canvas from "./components/Canvas";
-import ApiCall from "./components/ApiCall";
+import PointsSelector from "./components/PointsSelector.vue"
 
 export default {
   name: "app",
   components: {
-    Canvas,
-    ApiCall
-  }
-};
+    PointsSelector,
+  },
+}
 </script>
 
 <style>
+html,
+body {
+  height: 100%;
+}
+
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.selector-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
 }
 </style>
