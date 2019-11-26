@@ -201,10 +201,10 @@ export default {
       console.debug(
         `handlePointDrag <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`
       )
-      points[idx] = {
+      points.splice(idx, 1, {
         ...points[idx],
         pos: newPos,
-      }
+      })
     },
   },
 }
