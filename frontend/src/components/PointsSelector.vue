@@ -6,7 +6,7 @@
       @drag-point="handleDragPoint"
     >
     </image-container>
-    <draggable-list :points="points"></draggable-list>
+    <draggable-list :points="points" @swap="handleListSwap"></draggable-list>
   </div>
 </template>
 
@@ -59,6 +59,12 @@ export default {
         ...points[idx],
         pos: newPos,
       })
+    },
+    handleListSwap(swappedList) {
+      console.debug("handleListSwap@PointsSelector")
+      console.debug(swappedList)
+
+      this.points = swappedList
     },
   },
 }

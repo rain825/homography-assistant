@@ -1,6 +1,11 @@
 <template>
   <div class="draggable-wrapper">
-    <draggable v-model="points" @start="drag = true" @end="drag = false">
+    <draggable
+      :value="points"
+      @input="swappedList => $emit('swap', swappedList)"
+      @start="drag = true"
+      @end="drag = false"
+    >
       <div class="item-wrapper" v-for="(point, index) in points" :key="index">
         <div
           :style="{ 'background-color': point.color }"
