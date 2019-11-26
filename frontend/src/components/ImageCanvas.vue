@@ -18,8 +18,8 @@
 
         <point
           v-for="(point, index) in points"
-          :id="index"
-          :key="index"
+          :idx="index"
+          :key="point.id"
           :pos="point.pos"
           :color="point.color"
           :scale="pointScale"
