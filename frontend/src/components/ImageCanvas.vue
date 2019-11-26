@@ -4,26 +4,26 @@
       class="stage"
       :style="stageStyle"
       :config="stageConfig"
-      @wheel="handleWheel"
+      @wheel="handleWheelOnCanvas"
       ref="stage"
     >
       <v-layer :config="layerConfig" ref="layer">
         <v-image
           :config="imgConfig"
           ref="image"
-          @mouseenter="handleImageMouseEnter"
-          @mouseleave="handleImageMouseLeave"
+          @mouseenter="handleMouseEnterOnImage"
+          @mouseleave="handleMouseLeaveOnImage"
           @click="handleImageClick"
         ></v-image>
 
-        <Point
+        <point
           v-for="(point, index) in points"
           :id="index"
           :key="index"
           :pos="point.pos"
           :color="point.color"
-          @drag="handlePointDrag"
-        ></Point>
+          @drag="handleDragOnPoint"
+        ></point>
       </v-layer>
     </v-stage>
   </div>
@@ -31,37 +31,14 @@
 
 <script>
 import { calcScale } from "@/utils/scaling.js"
+import { pointsValidator } from "@/utils/validator"
+
 import Point from "./Point"
 
 export default {
+  name: "ImageCanvas",
   components: {
     Point,
-  },
-  data() {
-    return {
-      isMounted: false,
-      PointScale: 1.0,
-      layerConfig: {
-        draggable: true,
-      },
-      imgConfig: {
-        image: this.image,
-      },
-      isCursorOnImage: false,
-      points: [],
-      colorList: [
-        "cyan",
-        "blue",
-        "magenta",
-        "maroon",
-        "lime",
-        "red",
-        "yellow",
-        "green",
-        "navy",
-        "orange",
-      ],
-    }
   },
   props: {
     width: {
@@ -76,6 +53,24 @@ export default {
       type: HTMLImageElement,
       required: true,
     },
+    points: {
+      type: Array,
+      required: true,
+      validator: pointsValidator,
+    },
+  },
+  data() {
+    return {
+      isMounted: false,
+      PointScale: 1.0,
+      layerConfig: {
+        draggable: true,
+      },
+      imgConfig: {
+        image: this.image,
+      },
+      isCursorOnImage: false,
+    }
   },
   mounted() {
     this.isMounted = true
@@ -148,29 +143,6 @@ export default {
       }
       this.kStage.position(newPos)
     },
-    handleWheel(event) {
-      const scaleBy = 1.2
-      event.evt.preventDefault()
-      this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
-
-      this.PointScale = 1 / this.kStage.scaleX()
-
-      this.kStage.batchDraw()
-    },
-    handleImageMouseEnter() {
-      this.isCursorOnImage = true
-    },
-    handleImageMouseLeave() {
-      this.isCursorOnImage = false
-    },
-    handleImageClick() {
-      const cursorPos = this.calCurrentCursorPosInImage()
-      const colorNum = this.points.length % this.colorList.length
-      this.points.push({
-        pos: cursorPos,
-        color: this.colorList[colorNum],
-      })
-    },
     calCurrentCursorPosInImage() {
       const cursorPos = this.kStage.getPointerPosition()
       const stagePos = this.kStage.position()
@@ -195,16 +167,33 @@ export default {
 
       return fixedCursorPos
     },
-    handlePointDrag(idx, newPos) {
-      const points = this.points
+    handleWheelOnCanvas(event) {
+      const scaleBy = 1.2
+      event.evt.preventDefault()
+      this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
 
+      this.PointScale = 1 / this.kStage.scaleX()
+
+      this.kStage.batchDraw()
+    },
+    handleMouseEnterOnImage() {
+      this.isCursorOnImage = true
+    },
+    handleMouseLeaveOnImage() {
+      this.isCursorOnImage = false
+    },
+    handleImageClick() {
+      const pos = this.calCurrentCursorPosInImage()
+
+      console.debug(`handleImageClick@ImageCanvas <pos=${JSON.stringify(pos)}>`)
+      this.$emit("add-point", pos)
+    },
+
+    handleDragOnPoint(idx, newPos) {
       console.debug(
-        `handlePointDrag <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`
+        `handleDragOnPoint@ImageCanvas <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`
       )
-      points[idx] = {
-        ...points[idx],
-        pos: newPos,
-      }
+      this.$emit("drag-point", idx, newPos)
     },
   },
 }

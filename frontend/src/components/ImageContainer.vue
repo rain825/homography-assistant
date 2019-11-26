@@ -1,24 +1,25 @@
 <template>
-  <div class="wrapper" ref="wrapper">
+  <div class="container-wrapper" ref="wrapper">
     <file-uploader
       @submit="handleSubmit"
       :image-visibility="image !== null"
       v-if="uploadable"
     ></file-uploader>
-    <!-- <canvas class="canvas" ref="canvas"></canvas> -->
-    <!-- <div v-if="image !== null">
-      Image Loaded !
-    </div> -->
+
     <image-canvas
+      @add-point="handleAddPoint"
+      @drag-point="handleDragPoint"
       :width="canvasWidth"
-      @submit="handleSubmit"
       :image="image"
+      :points="points"
       v-if="image !== null"
     ></image-canvas>
   </div>
 </template>
 
 <script>
+import { pointsValidator } from "@/utils/validator"
+
 import FileUploader from "./FileUploader"
 import ImageCanvas from "./ImageCanvas.vue"
 
@@ -26,6 +27,13 @@ export default {
   components: {
     FileUploader,
     ImageCanvas,
+  },
+  props: {
+    points: {
+      type: Array,
+      required: true,
+      validator: pointsValidator,
+    },
   },
   data() {
     return {
@@ -42,13 +50,26 @@ export default {
       this.uploadable = false
       this.image = image
     },
+    handleAddPoint(pos) {
+      console.debug(
+        `handleAddPoint@ImageContainer <pos=${JSON.stringify(pos)}>`
+      )
+      this.$emit("add-point", pos)
+    },
+    handleDragPoint(idx, newPos) {
+      console.debug(
+        `handleDragPoint@ImageContainer <idx=${idx} newPos=${JSON.stringify(
+          newPos
+        )}>`
+      )
+      this.$emit("drag-point", idx, newPos)
+    },
   },
 }
 </script>
 
 <style scoped>
-.wrapper {
-  margin: 8px;
+.container-wrapper {
   width: 100%;
   height: fit-content;
   position: relative;

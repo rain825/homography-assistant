@@ -1,12 +1,12 @@
 <template>
-  <div class="wrapper">
-    <draggable v-model="listItem" @start="drag = true" @end="drag = false">
-      <div class="item-wrapper" v-for="(item, index) in listItem" :key="index">
+  <div class="draggable-wrapper">
+    <draggable v-model="points" @start="drag = true" @end="drag = false">
+      <div class="item-wrapper" v-for="(point, index) in points" :key="index">
         <div
-          :style="{ 'background-color': item.color }"
+          :style="{ 'background-color': point.color }"
           class="item-color"
         ></div>
-        ( {{ item.pos.x }}, {{ item.pos.y }} )
+        {{ coordinate(point.pos) }}
       </div>
     </draggable>
   </div>
@@ -14,59 +14,42 @@
 
 <script>
 import draggable from "vuedraggable"
-
-Array.prototype.choice = function() {
-  return this[Math.floor(Math.random() * this.length)]
-}
+import { pointsValidator } from "@/utils/validator"
 
 export default {
-  name: "Test",
+  name: "DraggableList",
   components: {
     draggable,
   },
-  data() {
-    return {
-      colors: [
-        "cyan",
-        "blue",
-        "magenta",
-        "maroon",
-        "lime",
-        "red",
-        "yellow",
-        "green",
-        "navy",
-        "orange",
-      ],
-      listItem: new Array(),
-    }
+  props: {
+    points: {
+      type: Array,
+      required: true,
+      validator: pointsValidator,
+    },
   },
-  created() {
-    for (let i = 0; i < 5; i++) {
-      this.listItem.push({
-        pos: {
-          x: parseInt(Math.random() * 1000, 10),
-          y: parseInt(Math.random() * 1000, 10),
-        },
-        color: this.colors.choice(),
-      })
-    }
+  methods: {
+    coordinate(pos) {
+      const { x, y } = pos
+      return `(${parseInt(x, 10)}, ${parseInt(y, 10)})`
+    },
   },
-  methods: {},
 }
 </script>
 
 <style scoped>
-.wrapper {
-  width: 300px;
+.draggable-wrapper {
+  width: 100%;
   border: 3px solid blue;
 }
 .item-wrapper {
-  font-size: 2em;
-  padding-left: 1ex;
+  min-height: 30px;
+  font-size: 1.6em;
+  padding: 0.5ex 1ex;
   margin: 10px;
-  line-height: 2em;
-  font-weight: bold;
+  font-weight: 400;
+  font-family: monospace;
+  text-align: center;
   border: 3px solid rgba(0, 0, 0, 0.3);
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
 
@@ -81,8 +64,8 @@ export default {
 }
 
 .item-color {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   margin-right: 8px;
   border: 3px solid black;
   border-radius: 50%;

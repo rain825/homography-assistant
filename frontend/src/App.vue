@@ -1,19 +1,19 @@
 <template>
   <div id="app">
     <h1>homography-assistant</h1>
-    <div class="image-wrapper">
-      <image-container id="img-1" />
+    <div class="selector-wrapper">
+      <points-selector id="img-1" />
     </div>
   </div>
 </template>
 
 <script>
-import ImageContainer from "./components/ImageContainer.vue"
+import PointsSelector from "./components/PointsSelector.vue"
 
 export default {
   name: "app",
   components: {
-    ImageContainer,
+    PointsSelector,
   },
 }
 </script>
@@ -33,7 +33,7 @@ body {
   align-items: flex-start;
 }
 
-.image-wrapper {
+.selector-wrapper {
   width: 100%;
   display: flex;
   flex-direction: row;
