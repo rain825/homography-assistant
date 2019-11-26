@@ -24,6 +24,10 @@ export default {
       type: String,
       required: true,
     },
+    scale: {
+      type: Number,
+      required: false,
+    },
     overrideConfig: {
       type: Object,
       required: false,
@@ -36,7 +40,7 @@ export default {
           x: 1,
           y: 1,
         },
-        radius: 15,
+        radius: 10,
         stroke: "black",
         strokeWidth: 3,
         draggable: true,
@@ -44,9 +48,18 @@ export default {
     }
   },
   computed: {
+    scaledRadius() {
+      const scale = this.scale || 1.0
+      const base = this.commonConfig
+      return {
+        radius: base.radius * scale,
+        strokeWidth: base.strokeWidth * scale,
+      }
+    },
     config() {
       return {
         ...this.commonConfig,
+        ...this.scaledRadius,
         ...this.overrideConfig,
         ...this.pos,
         fill: this.color,

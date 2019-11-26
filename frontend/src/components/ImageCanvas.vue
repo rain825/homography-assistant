@@ -22,6 +22,7 @@
           :key="index"
           :pos="point.pos"
           :color="point.color"
+          :scale="pointScale"
           @drag="handleDragOnPoint"
         ></point>
       </v-layer>
@@ -33,7 +34,7 @@
 import { calcScale } from "@/utils/scaling.js"
 import { pointsValidator } from "@/utils/validator"
 
-import Point from "@/components/canvas/Point"
+import Point from "@/components/canvas/Point.vue"
 
 export default {
   name: "ImageCanvas",
@@ -62,7 +63,7 @@ export default {
   data() {
     return {
       isMounted: false,
-      PointScale: 1.0,
+      pointScale: 1.0,
       layerConfig: {
         draggable: true,
       },
@@ -172,7 +173,7 @@ export default {
       event.evt.preventDefault()
       this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
 
-      this.PointScale = 1 / this.kStage.scaleX()
+      this.pointScale = 1 / this.kStage.scaleX()
 
       this.kStage.batchDraw()
     },
