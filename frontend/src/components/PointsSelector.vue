@@ -92,17 +92,17 @@ export default {
 
 <style scoped>
 .points-selector {
-  width: 100%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  border: 5px solid red;
 }
 .image-container {
   width: 100%;
   height: fit-content;
   position: relative;
-  border: 5px solid red;
   box-sizing: border-box;
 }
 </style>
