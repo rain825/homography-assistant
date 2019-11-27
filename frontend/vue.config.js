@@ -9,6 +9,9 @@ module.exports = {
       "/api*": {
         target: "http://localhost:5050",
       },
+      "/test*": {
+        target: "http://localhost:5050",
+      },
     },
   },
 }
