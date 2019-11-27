@@ -12,6 +12,7 @@
 <script>
 import PointsSelector from "./components/PointsSelector.vue"
 import ProcessController from "./components/ProcessController.vue"
+import axios from "axios"
 
 export default {
   name: "app",
@@ -21,7 +22,23 @@ export default {
   },
   methods: {
     handleSend() {
-      console.debug(`test: ${this.$refs.img1.$data.points}`)
+      console.debug(`test: ${JSON.stringify(this.$refs.img1.$data.points)}`)
+      console.debug(`test: ${JSON.stringify(this.$refs.img2.$data.points)}`)
+
+      axios
+        .post("/api", {
+          ptsa: this.$refs.img1.$data.points.map(function(d) {
+            return Object.values(d.pos)
+          }),
+          ptsb: this.$refs.img2.$data.points.map(function(d) {
+            return Object.values(d.pos)
+          }),
+          width: this.$refs.img2.$data.image.naturalWidth,
+          height: this.$refs.img2.$data.image.naturalHeight,
+          img: this.$refs.img1.$data.image.src.split(",")[1],
+        })
+        .then(resp => console.debug(resp.data))
+        .catch(error => console.debug(error))
     },
   },
 }
