@@ -11,7 +11,7 @@
     <div>
       <image-canvas
         :image="resultImage"
-        :width="resultImageWidth"
+        :width="this.$el.clientWidth"
         :points="points"
         v-if="resultImage !== null"
       />
@@ -64,7 +64,7 @@ export default {
           image.onload = () => {
             this.resultImage = image
           }
-          image.src = "data:image/jpeg;base64," + resp.data["img"]
+          image.src = "data:image/png;base64," + resp.data["img"]
         })
         .catch(error => console.debug(error))
     },
