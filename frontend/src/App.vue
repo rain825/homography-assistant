@@ -3,6 +3,7 @@
     <h1>homography-assistant</h1>
     <div class="selector-wrapper">
       <points-selector id="img-1" ref="img1" />
+      <points-selector id="img-2" ref="img2" />
     </div>
     <process-controller @send="handleSend" />
   </div>
@@ -10,7 +11,7 @@
 
 <script>
 import PointsSelector from "./components/PointsSelector.vue"
-import ProcessController from "./components/ProccessController.vue"
+import ProcessController from "./components/ProcessController.vue"
 
 export default {
   name: "app",
