@@ -2,18 +2,26 @@
   <div id="app">
     <h1>homography-assistant</h1>
     <div class="selector-wrapper">
-      <points-selector id="img-1" />
+      <points-selector id="img-1" ref="img1" />
     </div>
+    <process-controller @send="handleSend" />
   </div>
 </template>
 
 <script>
 import PointsSelector from "./components/PointsSelector.vue"
+import ProcessController from "./components/ProccessController.vue"
 
 export default {
   name: "app",
   components: {
     PointsSelector,
+    ProcessController,
+  },
+  methods: {
+    handleSend() {
+      console.debug(`test: ${this.$refs.img1.$data.points}`)
+    },
   },
 }
 </script>
