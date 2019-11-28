@@ -43,6 +43,7 @@ python3 app.py
 
 ## Author
 - popunbom <fantom0779@gmail.com>
+- rain <@rain9525>
 
 ## LICENSE
 
