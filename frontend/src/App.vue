@@ -82,7 +82,7 @@ export default {
           image.onload = () => {
             this.resultImage = image
           }
-          image.src = "data:image/png;base64," + resp.data["img"]
+          image.src = resp.data["img"]
         })
         .catch(error => console.debug(error))
     },
