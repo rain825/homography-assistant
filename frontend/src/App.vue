@@ -53,11 +53,13 @@ export default {
 
       if (pointsA.length < 4 || pointsB.length < 4) {
         console.debug(`PointsA and PointsB require at least 4 items`)
+        alert(`PointsA and PointsB require at least 4 items`)
         return
       }
 
       if (pointsA.length != pointsB.length) {
         console.debug(`PointsA and PointsB must be same size`)
+        alert(`PointsA and PointsB must be same size`)
         return
       }
 
