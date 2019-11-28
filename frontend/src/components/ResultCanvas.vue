@@ -1,5 +1,5 @@
 <template>
-  <div id="result-canvas" class="image-canvas">
+  <div id="result-canvas" class="result-canvas">
     <v-stage
       class="stage"
       :style="stageStyle"
@@ -177,7 +177,7 @@ export default {
 </script>
 
 <style scoped>
-.image-canvas {
+.result-canvas {
   width: 100%;
   position: relative;
 }
