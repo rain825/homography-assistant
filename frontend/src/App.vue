@@ -70,8 +70,8 @@ export default {
       this.resultImageWidth = this.$refs.img2.$data.image.naturalWidth
       axios
         .post("/api", {
-          ptsa: pointsA,
-          ptsb: pointsB,
+          pointsA: pointsA,
+          pointsB: pointsB,
           width: this.$refs.img2.$data.image.naturalWidth,
           height: this.$refs.img2.$data.image.naturalHeight,
           img: this.$refs.img1.$data.image.src.split(",")[1],
