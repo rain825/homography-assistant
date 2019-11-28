@@ -93,7 +93,7 @@ export default {
 
 <style scoped>
 .points-selector {
-  width: 80%;
+  width: 45%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
