@@ -1,56 +1,77 @@
 <template>
-  <div class="selector-wrapper">
-    <image-container
-      :points="points"
-      @add-point="handleAddPoint"
-      @drag-point="handleDragPoint"
-    >
-    </image-container>
+  <div class="points-selector">
+    <div class="image-container" ref="wrapper">
+      <file-uploader
+        @submit="handleSubmit"
+        :canvas-visible="image !== null"
+        v-if="uploadable"
+      ></file-uploader>
+
+      <image-canvas
+        @add-point="handleAddPoint"
+        @drag-point="handleDragPoint"
+        :width="canvasWidth"
+        :image="image"
+        :points="points"
+        v-if="image !== null"
+      ></image-canvas>
+    </div>
     <draggable-list :points="points" @swap="handleListSwap"></draggable-list>
   </div>
 </template>
 
 <script>
-import ImageContainer from "@/components/ImageContainer.vue"
+import chroma from "chroma-js"
+import ImageCanvas from "@/components/ImageCanvas.vue"
+import FileUploader from "@/components/FileUploader.vue"
 import DraggableList from "@/components/DraggableList.vue"
 
 export default {
   name: "PointsSelector",
   components: {
-    ImageContainer,
+    ImageCanvas,
+    FileUploader,
     DraggableList,
   },
   data() {
     return {
-      colorList: [
-        "cyan",
-        "blue",
-        "magenta",
-        "maroon",
-        "lime",
-        "red",
-        "yellow",
-        "green",
-        "navy",
-        "orange",
-      ],
+      uploadable: true,
+      image: null,
+      canvasWidth: null,
       points: [],
     }
   },
+  mounted() {
+    this.canvasWidth = this.$el.clientWidth
+  },
   methods: {
+    generateRandomColor() {
+      const bg = chroma.random()
+      const fg =
+        chroma.contrast("white", bg) > chroma.contrast("black", bg)
+          ? chroma("white")
+          : chroma("black")
+
+      return {
+        bg: bg.hex(),
+        fg: fg.hex(),
+      }
+    },
+    handleSubmit(image) {
+      this.uploadable = false
+      this.image = image
+    },
     handleAddPoint(pos) {
-      console.debug(
-        `handleAddPoint@PointSelector <pos=${JSON.stringify(pos)}}>`
-      )
-      const colorNum = this.points.length % this.colorList.length
+      console.debug(`handleAddPoint <pos=${JSON.stringify(pos)}}>`)
       this.points.push({
+        id: this.points.length,
         pos: pos,
-        color: this.colorList[colorNum],
+        color: this.generateRandomColor(),
       })
     },
     handleDragPoint(idx, newPos) {
       console.debug(
-        `handleDragOnPoint@PointSelector <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`
+        `handleDragOnPoint <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`
       )
 
       const points = this.points
@@ -61,7 +82,7 @@ export default {
       })
     },
     handleListSwap(swappedList) {
-      console.debug("handleListSwap@PointsSelector")
+      console.debug("handleListSwap")
       console.debug(swappedList)
 
       this.points = swappedList
@@ -71,10 +92,18 @@ export default {
 </script>
 
 <style scoped>
-.selector-wrapper {
+.points-selector {
+  width: 45%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  border: 5px solid red;
+}
+.image-container {
+  width: 100%;
+  height: fit-content;
+  position: relative;
+  box-sizing: border-box;
 }
 </style>

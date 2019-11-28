@@ -1,19 +1,89 @@
 <template>
   <div id="app">
-    <h1>homography-assistant</h1>
+    <div class="tool">
+      <h1>homography-assistant</h1>
+      <process-controller @send="handleSend" />
+    </div>
     <div class="selector-wrapper">
-      <points-selector id="img-1" />
+      <points-selector id="img-1" ref="img1" />
+      <points-selector id="img-2" ref="img2" />
+    </div>
+    <div>
+      <image-canvas
+        :image="resultImage"
+        :width="this.$el.clientWidth"
+        v-if="resultImage !== null"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import PointsSelector from "./components/PointsSelector.vue"
+import ProcessController from "./components/ProcessController.vue"
+import ImageCanvas from "./components/ImageCanvas.vue"
+import axios from "axios"
 
 export default {
   name: "app",
   components: {
     PointsSelector,
+    ProcessController,
+    ImageCanvas,
+  },
+  data() {
+    return {
+      resultImage: null,
+      resultImageWidth: null,
+    }
+  },
+  methods: {
+    extractCoordinatesFromPoints(points) {
+      return points.map(point => Object.values(point.pos))
+    },
+    handleSend() {
+      const pointsA = this.extractCoordinatesFromPoints(
+        this.$refs.img1.$data.points
+      )
+      const pointsB = this.extractCoordinatesFromPoints(
+        this.$refs.img2.$data.points
+      )
+
+      if (pointsA.length < 4 || pointsB.length < 4) {
+        console.debug(`PointsA and PointsB require at least 4 items`)
+        alert(`PointsA and PointsB require at least 4 items`)
+        return
+      }
+
+      if (pointsA.length != pointsB.length) {
+        console.debug(`PointsA and PointsB must be same size`)
+        alert(`PointsA and PointsB must be same size`)
+        return
+      }
+
+      console.debug(`send: ${JSON.stringify(pointsA)}`)
+      console.debug(`send: ${JSON.stringify(pointsB)}`)
+
+      // どちらに変換するかによって変更
+      this.resultImageWidth = this.$refs.img2.$data.image.naturalWidth
+      axios
+        .post("/api", {
+          pointsA: pointsA,
+          pointsB: pointsB,
+          width: this.$refs.img2.$data.image.naturalWidth,
+          height: this.$refs.img2.$data.image.naturalHeight,
+          img: this.$refs.img1.$data.image.src.split(",")[1],
+        })
+        .then(resp => {
+          console.debug(resp.data)
+          const image = new Image()
+          image.onload = () => {
+            this.resultImage = image
+          }
+          image.src = resp.data["img"]
+        })
+        .catch(error => console.debug(error))
+    },
   },
 }
 </script>
@@ -32,12 +102,18 @@ body {
   justify-content: flex-start;
   align-items: flex-start;
 }
-
+.tool {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
 .selector-wrapper {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   align-items: flex-start;
 }
 </style>

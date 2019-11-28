@@ -24,9 +24,10 @@ def api_endpoint():
             return "びゅー"
         elif request.method == "POST":
             data = request.get_json()
-            transformImg = homography.projectiveTransform(data["ptsa"], data["ptsb"], base64ToMat(
+            transformImg = homography.projectiveTransform(data["pointsA"], data["pointsB"], base64ToMat(
                 data["img"]), data["width"], data["height"])
-            sendData = {"img": matTobase64(transformImg)}
+            sendData = {"img": "data:image/png;base64," +
+                        matTobase64(transformImg)}
             return jsonify(sendData)
     except Exception as e:
         return str(e)

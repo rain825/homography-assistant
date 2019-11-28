@@ -18,7 +18,6 @@ def projectiveTransform(pointA, pointB, imgA, imgBWitdh, imgBHeight):
           numpy uint8: 射影変換した画像。BGRA
 
     """
-    cv2.imwrite("testimg.png", imgA)
     whiteImg = np.full(imgA.shape[::-1][1:], 255, np.uint8)
 
     ptsA = np.float32(pointA)

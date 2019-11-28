@@ -1,5 +1,5 @@
 <template>
-  <div class="canvas-wrapper">
+  <div class="image-canvas">
     <v-stage
       class="stage"
       :style="stageStyle"
@@ -18,10 +18,11 @@
 
         <point
           v-for="(point, index) in points"
-          :id="index"
-          :key="index"
+          :idx="index"
+          :key="point.id"
           :pos="point.pos"
           :color="point.color"
+          :scale="pointScale"
           @drag="handleDragOnPoint"
         ></point>
       </v-layer>
@@ -33,7 +34,7 @@
 import { calcScale } from "@/utils/scaling.js"
 import { pointsValidator } from "@/utils/validator"
 
-import Point from "./Point"
+import Point from "@/components/canvas/Point.vue"
 
 export default {
   name: "ImageCanvas",
@@ -55,14 +56,14 @@ export default {
     },
     points: {
       type: Array,
-      required: true,
+      required: false,
       validator: pointsValidator,
     },
   },
   data() {
     return {
       isMounted: false,
-      PointScale: 1.0,
+      pointScale: 1.0,
       layerConfig: {
         draggable: true,
       },
@@ -172,7 +173,7 @@ export default {
       event.evt.preventDefault()
       this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
 
-      this.PointScale = 1 / this.kStage.scaleX()
+      this.pointScale = 1 / this.kStage.scaleX()
 
       this.kStage.batchDraw()
     },
@@ -200,7 +201,7 @@ export default {
 </script>
 
 <style scoped>
-.canvas-wrapper {
+.image-canvas {
   position: relative;
 }
 </style>
