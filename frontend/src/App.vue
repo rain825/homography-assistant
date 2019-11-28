@@ -9,7 +9,7 @@
       <points-selector id="img-2" ref="img2" />
     </div>
     <div>
-      <image-canvas
+      <result-canvas
         :image="resultImage"
         :width="this.$el.clientWidth"
         v-if="resultImage !== null"
@@ -22,6 +22,7 @@
 import PointsSelector from "./components/PointsSelector.vue"
 import ProcessController from "./components/ProcessController.vue"
 import ImageCanvas from "./components/ImageCanvas.vue"
+import ResultCanvas from "./components/ResultCanvas.vue"
 import axios from "axios"
 
 export default {
@@ -29,7 +30,7 @@ export default {
   components: {
     PointsSelector,
     ProcessController,
-    ImageCanvas,
+    ResultCanvas,
   },
   data() {
     return {
