@@ -38,16 +38,14 @@ export default {
     }
   },
   methods: {
-    convertPointsObjectToArray(points) {
-      return points.map(function(d) {
-        return Object.values(d.pos)
-      })
+    extractCoordinatesFromPoints(points) {
+      return points.map(point => Object.values(point.pos))
     },
     handleSend() {
-      const pointsA = this.convertPointsObjectToArray(
+      const pointsA = this.extractCoordinatesFromPoints(
         this.$refs.img1.$data.points
       )
-      const pointsB = this.convertPointsObjectToArray(
+      const pointsB = this.extractCoordinatesFromPoints(
         this.$refs.img2.$data.points
       )
 
