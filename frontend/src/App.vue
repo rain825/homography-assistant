@@ -1,18 +1,18 @@
 <template>
-  <div id="app">
-    <div class="tool">
-      <h1>homography-assistant</h1>
-      <process-controller @send="handleSend" />
-    </div>
-    <div class="selector-wrapper">
-      <points-selector id="img-1" ref="img1" />
-      <points-selector id="img-2" ref="img2" />
-    </div>
-    <div>
+  <div class="app-wrapper">
+    <div id="app">
+      <div class="tool">
+        <h1>homography-assistant</h1>
+        <process-controller @send="handleSend" />
+      </div>
+      <div class="selector-wrapper">
+        <points-selector id="img-1" ref="img1" />
+        <points-selector id="img-2" ref="img2" />
+      </div>
       <result-canvas
         :resultImage="resultImage"
         :underImage="underImage"
-        :width="this.$el.clientWidth"
+        :width="this.$el.clientWidth - 32"
         v-if="resultImage !== null"
       />
     </div>
@@ -97,6 +97,13 @@ body {
   height: 100%;
 }
 
+.app-wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 0px 16px;
+  box-sizing: border-box;
+}
+
 #app {
   width: 100%;
   height: 100%;
@@ -116,7 +123,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: flex-start;
 }
 </style>
