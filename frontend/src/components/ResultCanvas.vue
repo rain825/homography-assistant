@@ -9,11 +9,16 @@
     >
       <v-layer :config="layerConfig" ref="layer">
         <v-image
-          :config="imgConfig"
-          ref="image"
+          :config="underImageConfig"
+          ref="under-image"
           @mouseenter="handleMouseEnterOnImage"
           @mouseleave="handleMouseLeaveOnImage"
-          @click="handleImageClick"
+        ></v-image>
+        <v-image
+          :config="resultImageConfig"
+          ref="result-image"
+          @mouseenter="handleMouseEnterOnImage"
+          @mouseleave="handleMouseLeaveOnImage"
         ></v-image>
       </v-layer>
     </v-stage>
@@ -35,7 +40,11 @@ export default {
       type: Number,
       required: false,
     },
-    image: {
+    resultImage: {
+      type: HTMLImageElement,
+      required: true,
+    },
+    underImage: {
       type: HTMLImageElement,
       required: true,
     },
@@ -46,8 +55,11 @@ export default {
       layerConfig: {
         draggable: true,
       },
-      imgConfig: {
-        image: this.image,
+      resultImageConfig: {
+        image: this.resultImage,
+      },
+      underImageConfig: {
+        image: this.underImage,
       },
       isCursorOnImage: false,
     }
@@ -63,7 +75,7 @@ export default {
       return this.isMounted ? this.$refs.layer.getStage() : undefined
     },
     kImage() {
-      return this.isMounted ? this.$refs.image.getStage() : undefined
+      return this.isMounted ? this.$refs.underImage.getStage() : undefined
     },
     stageConfig() {
       const scale = this.calcScaling
@@ -79,15 +91,15 @@ export default {
     calcScaling() {
       if (this.width !== undefined && this.height !== undefined) {
         if (this.width >= this.height) {
-          return calcScale.basedOnWidth(this.width, this.image)
+          return calcScale.basedOnWidth(this.width, this.underImage)
         } else {
-          return calcScale.basedOnHeight(this.height, this.image)
+          return calcScale.basedOnHeight(this.height, this.underImage)
         }
       } else {
         if (this.width !== undefined) {
-          return calcScale.basedOnWidth(this.width, this.image)
+          return calcScale.basedOnWidth(this.width, this.underImage)
         } else {
-          return calcScale.basedOnHeight(this.height, this.image)
+          return calcScale.basedOnHeight(this.height, this.underImage)
         }
       }
     },
@@ -159,12 +171,6 @@ export default {
     },
     handleMouseLeaveOnImage() {
       this.isCursorOnImage = false
-    },
-    handleImageClick() {
-      const pos = this.calCurrentCursorPosInImage()
-
-      console.debug(`handleImageClick@ImageCanvas <pos=${JSON.stringify(pos)}>`)
-      this.$emit("add-point", pos)
     },
   },
 }

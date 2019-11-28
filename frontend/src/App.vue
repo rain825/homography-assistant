@@ -10,7 +10,8 @@
     </div>
     <div>
       <result-canvas
-        :image="resultImage"
+        :resultImage="resultImage"
+        :underImage="underImage"
         :width="this.$el.clientWidth"
         v-if="resultImage !== null"
       />
@@ -36,6 +37,7 @@ export default {
     return {
       resultImage: null,
       resultImageWidth: null,
+      underImage: null,
     }
   },
   methods: {
@@ -82,6 +84,7 @@ export default {
             this.resultImage = image
           }
           image.src = resp.data["img"]
+          this.underImage = this.$refs.img2.$data.image
         })
         .catch(error => console.debug(error))
     },
