@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <h1>homography-assistant</h1>
+    <div class="tool">
+      <h1>homography-assistant</h1>
+      <process-controller @send="handleSend" />
+    </div>
     <div class="selector-wrapper">
       <points-selector id="img-1" ref="img1" />
       <points-selector id="img-2" ref="img2" />
-    </div>
-    <div>
-      <process-controller @send="handleSend" />
     </div>
     <div>
       <image-canvas
@@ -102,12 +102,18 @@ body {
   justify-content: flex-start;
   align-items: flex-start;
 }
-
+.tool {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
 .selector-wrapper {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   align-items: flex-start;
 }
 </style>
