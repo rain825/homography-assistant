@@ -22,7 +22,6 @@
 <script>
 import PointsSelector from "./components/PointsSelector.vue"
 import ProcessController from "./components/ProcessController.vue"
-import ImageCanvas from "./components/ImageCanvas.vue"
 import ResultCanvas from "./components/ResultCanvas.vue"
 import axios from "axios"
 
