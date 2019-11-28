@@ -38,20 +38,38 @@ export default {
     }
   },
   methods: {
+    convertPointsObjectToArray(points) {
+      return points.map(function(d) {
+        return Object.values(d.pos)
+      })
+    },
     handleSend() {
-      console.debug(`test: ${JSON.stringify(this.$refs.img1.$data.points)}`)
-      console.debug(`test: ${JSON.stringify(this.$refs.img2.$data.points)}`)
+      const pointsA = this.convertPointsObjectToArray(
+        this.$refs.img1.$data.points
+      )
+      const pointsB = this.convertPointsObjectToArray(
+        this.$refs.img2.$data.points
+      )
+
+      if (pointsA.length < 4 || pointsB.length < 4) {
+        console.debug(`PointsA and PointsB require at least 4 items`)
+        return
+      }
+
+      if (pointsA.length != pointsB.length) {
+        console.debug(`PointsA and PointsB must be same size`)
+        return
+      }
+
+      console.debug(`send: ${JSON.stringify(pointsA)}`)
+      console.debug(`send: ${JSON.stringify(pointsB)}`)
 
       // どちらに変換するかによって変更
       this.resultImageWidth = this.$refs.img2.$data.image.naturalWidth
       axios
         .post("/api", {
-          ptsa: this.$refs.img1.$data.points.map(function(d) {
-            return Object.values(d.pos)
-          }),
-          ptsb: this.$refs.img2.$data.points.map(function(d) {
-            return Object.values(d.pos)
-          }),
+          ptsa: pointsA,
+          ptsb: pointsB,
           width: this.$refs.img2.$data.image.naturalWidth,
           height: this.$refs.img2.$data.image.naturalHeight,
           img: this.$refs.img1.$data.image.src.split(",")[1],
