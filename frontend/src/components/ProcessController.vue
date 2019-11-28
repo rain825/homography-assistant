@@ -1,6 +1,7 @@
 <template>
   <div class="controller-wrapper">
     <div class="button" @click="handleClick">transform</div>
+    <div class="button" @click="handleChangeVisible">hide</div>
   </div>
 </template>
 
@@ -11,6 +12,9 @@ export default {
     handleClick() {
       this.$emit("send")
     },
+    handleChangeVisible() {
+      this.$emit("changeVisible")
+    },
   },
 }
 </script>
@@ -18,11 +22,14 @@ export default {
 <style scoped>
 .controller-wrapper {
   margin: 0px 16px;
+  display: flex;
+  flex-direction: row;
 }
 .controller-wrapper .button {
   padding: 8px;
   color: white;
   background-color: blue;
+  margin: 8px;
 }
 .controller-wrapper .button:hover {
   background-color: #333;

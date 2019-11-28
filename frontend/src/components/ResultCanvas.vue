@@ -10,13 +10,13 @@
       <v-layer :config="layerConfig" ref="layer">
         <v-image
           :config="underImageConfig"
-          ref="under-image"
+          ref="underImage"
           @mouseenter="handleMouseEnterOnImage"
           @mouseleave="handleMouseLeaveOnImage"
         ></v-image>
         <v-image
           :config="resultImageConfig"
-          ref="result-image"
+          ref="resultImage"
           @mouseenter="handleMouseEnterOnImage"
           @mouseleave="handleMouseLeaveOnImage"
         ></v-image>
