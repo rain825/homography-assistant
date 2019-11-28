@@ -12,7 +12,6 @@
       <image-canvas
         :image="resultImage"
         :width="this.$el.clientWidth"
-        :points="points"
         v-if="resultImage !== null"
       />
     </div>
@@ -36,7 +35,6 @@ export default {
     return {
       resultImage: null,
       resultImageWidth: null,
-      points: [],
     }
   },
   methods: {

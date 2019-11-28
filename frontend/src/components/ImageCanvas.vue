@@ -56,7 +56,7 @@ export default {
     },
     points: {
       type: Array,
-      required: true,
+      required: false,
       validator: pointsValidator,
     },
   },
