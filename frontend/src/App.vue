@@ -44,7 +44,6 @@ export default {
   data() {
     return {
       overlayImage: null,
-      overlayImageWidth: null,
       baseImage: null,
       isOverlayImageVisible: true,
       overlayImageOpacity: 1.0,
@@ -77,8 +76,6 @@ export default {
       console.debug(`send: ${JSON.stringify(pointsA)}`)
       console.debug(`send: ${JSON.stringify(pointsB)}`)
 
-      // どちらに変換するかによって変更
-      this.overlayImageWidth = this.$refs.img2.$data.image.naturalWidth
       axios
         .post("/api", {
           pointsA: pointsA,
