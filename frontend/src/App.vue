@@ -5,10 +5,10 @@
         <h1>homography-assistant</h1>
         <process-controller
           @send="handleSend"
-          @changeVisible="handleChangeResultImageVisible"
-          :isResultImageVisible="isResultImageVisible"
-          :resultImageOpacity="resultImageOpacity"
-          @sliderChange="handleResultImageOpacityChange"
+          @changeVisible="handleChangeOverlayImageVisible"
+          :isOverlayImageVisible="isOverlayImageVisible"
+          :overlayImageOpacity="overlayImageOpacity"
+          @sliderChange="handleOverlayImageOpacityChange"
         />
       </div>
       <div class="selector-wrapper">
@@ -17,12 +17,12 @@
       </div>
       <result-canvas
         ref="resultCanvas"
-        :resultImage="resultImage"
+        :overlayImage="overlayImage"
         :baseImage="baseImage"
         :width="this.$el.clientWidth - 32"
-        :isResultImageVisible="isResultImageVisible"
-        :resultImageOpacity="resultImageOpacity"
-        v-if="resultImage !== null"
+        :isOverlayImageVisible="isOverlayImageVisible"
+        :overlayImageOpacity="overlayImageOpacity"
+        v-if="overlayImage !== null"
       />
     </div>
   </div>
@@ -43,11 +43,11 @@ export default {
   },
   data() {
     return {
-      resultImage: null,
-      resultImageWidth: null,
+      overlayImage: null,
+      overlayImageWidth: null,
       baseImage: null,
-      isResultImageVisible: true,
-      resultImageOpacity: 1.0,
+      isOverlayImageVisible: true,
+      overlayImageOpacity: 1.0,
     }
   },
   methods: {
@@ -78,7 +78,7 @@ export default {
       console.debug(`send: ${JSON.stringify(pointsB)}`)
 
       // どちらに変換するかによって変更
-      this.resultImageWidth = this.$refs.img2.$data.image.naturalWidth
+      this.overlayImageWidth = this.$refs.img2.$data.image.naturalWidth
       axios
         .post("/api", {
           pointsA: pointsA,
@@ -91,19 +91,19 @@ export default {
           console.debug(resp.data)
           const image = new Image()
           image.onload = () => {
-            this.resultImage = image
+            this.overlayImage = image
           }
           image.src = resp.data["img"]
           this.baseImage = this.$refs.img2.$data.image
         })
         .catch(error => console.debug(error))
     },
-    handleChangeResultImageVisible() {
+    handleChangeOverlayImageVisible() {
       // 射影変換画像の表示/非表示切り替え
-      this.isResultImageVisible = !this.isResultImageVisible
+      this.isOverlayImageVisible = !this.isOverlayImageVisible
     },
-    handleResultImageOpacityChange(opacity) {
-      this.resultImageOpacity = opacity
+    handleOverlayImageOpacityChange(opacity) {
+      this.overlayImageOpacity = opacity
     },
   },
 }

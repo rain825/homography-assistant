@@ -2,7 +2,7 @@
   <div class="controller-wrapper">
     <div class="button" @click="handleClick">transform</div>
     <div class="button" @click="handleChangeVisible">
-      {{ isResultImageVisible ? "Hide" : "Show" }}
+      {{ isOverlayImageVisible ? "Hide" : "Show" }}
     </div>
     <input
       type="range"
@@ -19,11 +19,11 @@
 export default {
   name: "ProccessController",
   props: {
-    isResultImageVisible: {
+    isOverlayImageVisible: {
       type: Boolean,
       required: true,
     },
-    resultImageOpacity: {
+    overlayImageOpacity: {
       type: Number,
       required: true,
     },

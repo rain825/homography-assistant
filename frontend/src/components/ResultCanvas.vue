@@ -15,8 +15,8 @@
           @mouseleave="handleMouseLeaveOnImage"
         ></v-image>
         <v-image
-          :config="resultImageConfig"
-          ref="resultImage"
+          :config="overlayImageConfig"
+          ref="overlayImage"
           @mouseenter="handleMouseEnterOnImage"
           @mouseleave="handleMouseLeaveOnImage"
         ></v-image>
@@ -40,7 +40,7 @@ export default {
       type: Number,
       required: false,
     },
-    resultImage: {
+    overlayImage: {
       type: HTMLImageElement,
       required: true,
     },
@@ -48,11 +48,11 @@ export default {
       type: HTMLImageElement,
       required: true,
     },
-    isResultImageVisible: {
+    isOverlayImageVisible: {
       type: Boolean,
       required: true,
     },
-    resultImageOpacity: {
+    overlayImageOpacity: {
       type: Number,
       required: true,
     },
@@ -112,11 +112,11 @@ export default {
         height: `${parseInt(scale.size.canvas.height)}px`,
       }
     },
-    resultImageConfig() {
+    overlayImageConfig() {
       return {
-        image: this.resultImage,
-        visible: this.isResultImageVisible,
-        opacity: this.resultImageOpacity,
+        image: this.overlayImage,
+        visible: this.isOverlayImageVisible,
+        opacity: this.overlayImageOpacity,
       }
     },
     baseImageConfig() {
