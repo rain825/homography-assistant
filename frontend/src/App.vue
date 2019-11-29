@@ -5,7 +5,7 @@
         <h1>homography-assistant</h1>
         <process-controller
           @send="handleSend"
-          @changeVisible="handleChangeVisible"
+          @changeVisible="handleChangeResultImageVisible"
           :isResultImageVisible="isResultImageVisible"
           :resultImageOpacity="resultImageOpacity"
           @sliderChange="handleResultImageOpacityChange"
@@ -98,7 +98,7 @@ export default {
         })
         .catch(error => console.debug(error))
     },
-    handleChangeVisible() {
+    handleChangeResultImageVisible() {
       // 射影変換画像の表示/非表示切り替え
       this.isResultImageVisible = !this.isResultImageVisible
     },
