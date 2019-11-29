@@ -1,13 +1,21 @@
 <template>
   <div class="controller-wrapper">
     <div class="button" @click="handleClick">transform</div>
-    <div class="button" @click="handleChangeVisible">hide</div>
+    <div class="button" @click="handleChangeVisible">
+      {{ resultImageVisible ? "Hide" : "Show" }}
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "ProccessController",
+  props: {
+    resultImageVisible: {
+      type: Boolean,
+      required: true,
+    },
+  },
   methods: {
     handleClick() {
       this.$emit("send")

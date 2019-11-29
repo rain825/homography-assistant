@@ -48,15 +48,16 @@ export default {
       type: HTMLImageElement,
       required: true,
     },
+    resultImageVisible: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     return {
       isMounted: false,
       layerConfig: {
         draggable: true,
-      },
-      resultImageConfig: {
-        image: this.resultImage,
       },
       underImageConfig: {
         image: this.underImage,
@@ -108,6 +109,12 @@ export default {
       return {
         width: `${parseInt(scale.size.canvas.width)}px`,
         height: `${parseInt(scale.size.canvas.height)}px`,
+      }
+    },
+    resultImageConfig() {
+      return {
+        image: this.resultImage,
+        visible: this.resultImageVisible,
       }
     },
   },

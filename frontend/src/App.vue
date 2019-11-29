@@ -3,7 +3,11 @@
     <div id="app">
       <div class="tool">
         <h1>homography-assistant</h1>
-        <process-controller @send="handleSend" @changeVisible="handleChangeVisible" />
+        <process-controller
+          @send="handleSend"
+          @changeVisible="handleChangeVisible"
+          :resultImageVisible="resultVisible"
+        />
       </div>
       <div class="selector-wrapper">
         <points-selector id="img-1" ref="img1" />
@@ -14,6 +18,7 @@
         :resultImage="resultImage"
         :underImage="underImage"
         :width="this.$el.clientWidth - 32"
+        :resultImageVisible="resultVisible"
         v-if="resultImage !== null"
       />
     </div>
@@ -90,10 +95,8 @@ export default {
         .catch(error => console.debug(error));
     },
     handleChangeVisible() {
+      // 射影変換画像の表示/非表示切り替え
       this.resultVisible = !this.resultVisible;
-      this.$refs.resultCanvas.$refs.resultImage
-        .getNode()
-        .setVisible(this.resultVisible);
     }
   }
 };
