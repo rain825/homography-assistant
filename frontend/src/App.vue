@@ -6,7 +6,7 @@
         <process-controller
           @send="handleSend"
           @changeVisible="handleChangeVisible"
-          :resultImageVisible="resultVisible"
+          :isResultImageVisible="isResultImageVisible"
         />
       </div>
       <div class="selector-wrapper">
@@ -18,7 +18,7 @@
         :resultImage="resultImage"
         :underImage="underImage"
         :width="this.$el.clientWidth - 32"
-        :resultImageVisible="resultVisible"
+        :isResultImageVisible="isResultImageVisible"
         v-if="resultImage !== null"
       />
     </div>
@@ -43,7 +43,7 @@ export default {
       resultImage: null,
       resultImageWidth: null,
       underImage: null,
-      resultVisible: true,
+      isResultImageVisible: true,
     }
   },
   methods: {
@@ -96,7 +96,7 @@ export default {
     },
     handleChangeVisible() {
       // 射影変換画像の表示/非表示切り替え
-      this.resultVisible = !this.resultVisible
+      this.isResultImageVisible = !this.isResultImageVisible
     },
   },
 }

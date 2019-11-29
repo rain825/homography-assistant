@@ -2,7 +2,7 @@
   <div class="controller-wrapper">
     <div class="button" @click="handleClick">transform</div>
     <div class="button" @click="handleChangeVisible">
-      {{ resultImageVisible ? "Hide" : "Show" }}
+      {{ isResultImageVisible ? "Hide" : "Show" }}
     </div>
   </div>
 </template>
@@ -11,7 +11,7 @@
 export default {
   name: "ProccessController",
   props: {
-    resultImageVisible: {
+    isResultImageVisible: {
       type: Boolean,
       required: true,
     },

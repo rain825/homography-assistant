@@ -48,7 +48,7 @@ export default {
       type: HTMLImageElement,
       required: true,
     },
-    resultImageVisible: {
+    isResultImageVisible: {
       type: Boolean,
       required: true,
     },
@@ -111,7 +111,7 @@ export default {
     resultImageConfig() {
       return {
         image: this.resultImage,
-        visible: this.resultImageVisible,
+        visible: this.isResultImageVisible,
       }
     },
     underImageConfig() {
