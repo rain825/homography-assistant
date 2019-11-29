@@ -52,6 +52,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    resultImageOpacity: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
@@ -112,6 +116,7 @@ export default {
       return {
         image: this.resultImage,
         visible: this.isResultImageVisible,
+        opacity: this.resultImageOpacity,
       }
     },
     underImageConfig() {

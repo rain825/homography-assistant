@@ -19,6 +19,7 @@
         :underImage="underImage"
         :width="this.$el.clientWidth - 32"
         :isResultImageVisible="isResultImageVisible"
+        :resultImageOpacity="resultImageOpacity"
         v-if="resultImage !== null"
       />
     </div>
@@ -44,6 +45,7 @@ export default {
       resultImageWidth: null,
       underImage: null,
       isResultImageVisible: true,
+      resultImageOpacity: 1.0,
     }
   },
   methods: {
