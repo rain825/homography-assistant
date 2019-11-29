@@ -18,7 +18,7 @@
       <result-canvas
         ref="resultCanvas"
         :resultImage="resultImage"
-        :underImage="underImage"
+        :baseImage="baseImage"
         :width="this.$el.clientWidth - 32"
         :isResultImageVisible="isResultImageVisible"
         :resultImageOpacity="resultImageOpacity"
@@ -45,7 +45,7 @@ export default {
     return {
       resultImage: null,
       resultImageWidth: null,
-      underImage: null,
+      baseImage: null,
       isResultImageVisible: true,
       resultImageOpacity: 1.0,
     }
@@ -94,7 +94,7 @@ export default {
             this.resultImage = image
           }
           image.src = resp.data["img"]
-          this.underImage = this.$refs.img2.$data.image
+          this.baseImage = this.$refs.img2.$data.image
         })
         .catch(error => console.debug(error))
     },

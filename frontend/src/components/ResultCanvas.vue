@@ -9,8 +9,8 @@
     >
       <v-layer :config="layerConfig" ref="layer">
         <v-image
-          :config="underImageConfig"
-          ref="underImage"
+          :config="baseImageConfig"
+          ref="baseImage"
           @mouseenter="handleMouseEnterOnImage"
           @mouseleave="handleMouseLeaveOnImage"
         ></v-image>
@@ -44,7 +44,7 @@ export default {
       type: HTMLImageElement,
       required: true,
     },
-    underImage: {
+    baseImage: {
       type: HTMLImageElement,
       required: true,
     },
@@ -77,7 +77,7 @@ export default {
       return this.isMounted ? this.$refs.layer.getStage() : undefined
     },
     kImage() {
-      return this.isMounted ? this.$refs.underImage.getStage() : undefined
+      return this.isMounted ? this.$refs.baseImage.getStage() : undefined
     },
     stageConfig() {
       const scale = this.calcScaling
@@ -93,15 +93,15 @@ export default {
     calcScaling() {
       if (this.width !== undefined && this.height !== undefined) {
         if (this.width >= this.height) {
-          return calcScale.basedOnWidth(this.width, this.underImage)
+          return calcScale.basedOnWidth(this.width, this.baseImage)
         } else {
-          return calcScale.basedOnHeight(this.height, this.underImage)
+          return calcScale.basedOnHeight(this.height, this.baseImage)
         }
       } else {
         if (this.width !== undefined) {
-          return calcScale.basedOnWidth(this.width, this.underImage)
+          return calcScale.basedOnWidth(this.width, this.baseImage)
         } else {
-          return calcScale.basedOnHeight(this.height, this.underImage)
+          return calcScale.basedOnHeight(this.height, this.baseImage)
         }
       }
     },
@@ -119,9 +119,9 @@ export default {
         opacity: this.resultImageOpacity,
       }
     },
-    underImageConfig() {
+    baseImageConfig() {
       return {
-        image: this.underImage,
+        image: this.baseImage,
       }
     },
   },
