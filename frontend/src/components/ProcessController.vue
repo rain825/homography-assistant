@@ -4,6 +4,14 @@
     <div class="button" @click="handleChangeVisible">
       {{ isResultImageVisible ? "Hide" : "Show" }}
     </div>
+    <input
+      type="range"
+      value="1.0"
+      min="0.0"
+      max="1.0"
+      step="0.01"
+      @input="handleSliderChange"
+    />
   </div>
 </template>
 
@@ -15,6 +23,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    resultImageOpacity: {
+      type: Number,
+      required: true,
+    },
   },
   methods: {
     handleClick() {
@@ -22,6 +34,9 @@ export default {
     },
     handleChangeVisible() {
       this.$emit("changeVisible")
+    },
+    handleSliderChange() {
+      this.$emit("sliderChange", Number(event.target.value))
     },
   },
 }

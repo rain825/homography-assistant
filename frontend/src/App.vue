@@ -7,6 +7,8 @@
           @send="handleSend"
           @changeVisible="handleChangeVisible"
           :isResultImageVisible="isResultImageVisible"
+          :resultImageOpacity="resultImageOpacity"
+          @sliderChange="handleResultImageOpacityChange"
         />
       </div>
       <div class="selector-wrapper">
@@ -99,6 +101,9 @@ export default {
     handleChangeVisible() {
       // 射影変換画像の表示/非表示切り替え
       this.isResultImageVisible = !this.isResultImageVisible
+    },
+    handleResultImageOpacityChange(opacity) {
+      this.resultImageOpacity = opacity
     },
   },
 }
