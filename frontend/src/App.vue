@@ -26,80 +26,80 @@
 </template>
 
 <script>
-import PointsSelector from "./components/PointsSelector.vue";
-import ProcessController from "./components/ProcessController.vue";
-import ResultCanvas from "./components/ResultCanvas.vue";
-import axios from "axios";
+import PointsSelector from "./components/PointsSelector.vue"
+import ProcessController from "./components/ProcessController.vue"
+import ResultCanvas from "./components/ResultCanvas.vue"
+import axios from "axios"
 
 export default {
   name: "app",
   components: {
     PointsSelector,
     ProcessController,
-    ResultCanvas
+    ResultCanvas,
   },
   data() {
     return {
       resultImage: null,
       resultImageWidth: null,
       underImage: null,
-      resultVisible: true
-    };
+      resultVisible: true,
+    }
   },
   methods: {
     extractCoordinatesFromPoints(points) {
-      return points.map(point => Object.values(point.pos));
+      return points.map(point => Object.values(point.pos))
     },
     handleSend() {
       const pointsA = this.extractCoordinatesFromPoints(
         this.$refs.img1.$data.points
-      );
+      )
       const pointsB = this.extractCoordinatesFromPoints(
         this.$refs.img2.$data.points
-      );
+      )
 
       if (pointsA.length < 4 || pointsB.length < 4) {
-        console.debug(`PointsA and PointsB require at least 4 items`);
-        alert(`PointsA and PointsB require at least 4 items`);
-        return;
+        console.debug(`PointsA and PointsB require at least 4 items`)
+        alert(`PointsA and PointsB require at least 4 items`)
+        return
       }
 
       if (pointsA.length != pointsB.length) {
-        console.debug(`PointsA and PointsB must be same size`);
-        alert(`PointsA and PointsB must be same size`);
-        return;
+        console.debug(`PointsA and PointsB must be same size`)
+        alert(`PointsA and PointsB must be same size`)
+        return
       }
 
-      console.debug(`send: ${JSON.stringify(pointsA)}`);
-      console.debug(`send: ${JSON.stringify(pointsB)}`);
+      console.debug(`send: ${JSON.stringify(pointsA)}`)
+      console.debug(`send: ${JSON.stringify(pointsB)}`)
 
       // どちらに変換するかによって変更
-      this.resultImageWidth = this.$refs.img2.$data.image.naturalWidth;
+      this.resultImageWidth = this.$refs.img2.$data.image.naturalWidth
       axios
         .post("/api", {
           pointsA: pointsA,
           pointsB: pointsB,
           width: this.$refs.img2.$data.image.naturalWidth,
           height: this.$refs.img2.$data.image.naturalHeight,
-          img: this.$refs.img1.$data.image.src.split(",")[1]
+          img: this.$refs.img1.$data.image.src.split(",")[1],
         })
         .then(resp => {
-          console.debug(resp.data);
-          const image = new Image();
+          console.debug(resp.data)
+          const image = new Image()
           image.onload = () => {
-            this.resultImage = image;
-          };
-          image.src = resp.data["img"];
-          this.underImage = this.$refs.img2.$data.image;
+            this.resultImage = image
+          }
+          image.src = resp.data["img"]
+          this.underImage = this.$refs.img2.$data.image
         })
-        .catch(error => console.debug(error));
+        .catch(error => console.debug(error))
     },
     handleChangeVisible() {
       // 射影変換画像の表示/非表示切り替え
-      this.resultVisible = !this.resultVisible;
-    }
-  }
-};
+      this.resultVisible = !this.resultVisible
+    },
+  },
+}
 </script>
 
 <style>

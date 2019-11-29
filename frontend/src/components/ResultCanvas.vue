@@ -59,9 +59,6 @@ export default {
       layerConfig: {
         draggable: true,
       },
-      underImageConfig: {
-        image: this.underImage,
-      },
       isCursorOnImage: false,
     }
   },
@@ -115,6 +112,11 @@ export default {
       return {
         image: this.resultImage,
         visible: this.resultImageVisible,
+      }
+    },
+    underImageConfig() {
+      return {
+        image: this.underImage,
       }
     },
   },
