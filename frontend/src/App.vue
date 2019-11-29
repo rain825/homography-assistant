@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper">
-    <div id="app">
+    <div id="app" ref="app">
       <div class="tool">
         <h1>homography-assistant</h1>
         <process-controller
@@ -19,7 +19,7 @@
         ref="resultCanvas"
         :overlayImage="overlayImage"
         :baseImage="baseImage"
-        :width="this.$el.clientWidth - 32"
+        :width="this.$refs.app.clientWidth"
         :isOverlayImageVisible="isOverlayImageVisible"
         :overlayImageOpacity="overlayImageOpacity"
         v-if="overlayImage !== null"
