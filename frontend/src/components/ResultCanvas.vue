@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { calcScale } from "@/utils/scaling.js"
+import { calcScaling } from "@/utils/scaling.js"
 
 export default {
   name: "ImageCanvas",
@@ -81,15 +81,15 @@ export default {
     calcScaling() {
       if (this.width !== undefined && this.height !== undefined) {
         if (this.width >= this.height) {
-          return calcScale.basedOnWidth(this.width, this.result.baseImage)
+          return calcScaling.basedOnWidth(this.width, this.result.baseImage)
         } else {
-          return calcScale.basedOnHeight(this.height, this.result.baseImage)
+          return calcScaling.basedOnHeight(this.height, this.result.baseImage)
         }
       } else {
         if (this.width !== undefined) {
-          return calcScale.basedOnWidth(this.width, this.result.baseImage)
+          return calcScaling.basedOnWidth(this.width, this.result.baseImage)
         } else {
-          return calcScale.basedOnHeight(this.height, this.result.baseImage)
+          return calcScaling.basedOnHeight(this.height, this.result.baseImage)
         }
       }
     },
