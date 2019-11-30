@@ -50,10 +50,11 @@ export default {
     extractCoordinatesFromPoints(points) {
       return points.map(point => Object.values(point.pos))
     },
-    handleSend() {
+    checkPoints() {
       const pointsA = this.extractCoordinatesFromPoints(
         this.$refs.img1.$data.points
       )
+
       const pointsB = this.extractCoordinatesFromPoints(
         this.$refs.img2.$data.points
       )
@@ -61,36 +62,49 @@ export default {
       if (pointsA.length < 4 || pointsB.length < 4) {
         console.debug(`PointsA and PointsB require at least 4 items`)
         alert(`PointsA and PointsB require at least 4 items`)
-        return
+        return false
       }
 
       if (pointsA.length != pointsB.length) {
         console.debug(`PointsA and PointsB must be same size`)
         alert(`PointsA and PointsB must be same size`)
-        return
+        return false
       }
 
-      console.debug(`send: ${JSON.stringify(pointsA)}`)
-      console.debug(`send: ${JSON.stringify(pointsB)}`)
+      return true
+    },
+    handleSend() {
+      if (!this.checkPoints()) return
+
+      const overlayImage = this.$refs.img1
+      const baseImage = this.$refs.img2
 
       axios
         .post("/api", {
-          pointsA: pointsA,
-          pointsB: pointsB,
-          width: this.$refs.img2.$data.image.naturalWidth,
-          height: this.$refs.img2.$data.image.naturalHeight,
-          img: this.$refs.img1.$data.image.src.split(",")[1],
+          img: overlayImage.$data.image.src,
+          points_img: this.extractCoordinatesFromPoints(
+            overlayImage.$data.points
+          ),
+          points_another: this.extractCoordinatesFromPoints(
+            baseImage.$data.points
+          ),
+          width: baseImage.$data.image.naturalWidth,
+          height: baseImage.$data.image.naturalHeight,
         })
         .then(resp => {
           console.debug(resp.data)
           const image = new Image()
+
           image.onload = () => {
             this.resultCanvas.overlayImage = image
           }
           image.src = resp.data["img"]
-          this.resultCanvas.baseImage = this.$refs.img2.$data.image
+          this.resultCanvas.baseImage = baseImage.$data.image
         })
-        .catch(error => console.debug(error))
+        .catch(error => {
+          console.error(error)
+          console.error(error.response.data)
+        })
     },
   },
 }
