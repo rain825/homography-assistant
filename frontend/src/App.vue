@@ -11,11 +11,8 @@
       </div>
       <result-canvas
         ref="resultCanvas"
-        :overlayImage="resultCanvas.overlayImage"
-        :baseImage="resultCanvas.baseImage"
+        :result="resultCanvas"
         :width="this.$refs.app.clientWidth"
-        :isOverlayImageVisible="resultCanvas.options.overlayImage.visible"
-        :overlayImageOpacity="resultCanvas.options.overlayImage.opacity"
         v-if="resultCanvas.overlayImage !== null"
       />
     </div>

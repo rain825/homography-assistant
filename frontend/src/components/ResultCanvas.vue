@@ -40,20 +40,8 @@ export default {
       type: Number,
       required: false,
     },
-    overlayImage: {
-      type: HTMLImageElement,
-      required: true,
-    },
-    baseImage: {
-      type: HTMLImageElement,
-      required: true,
-    },
-    isOverlayImageVisible: {
-      type: Boolean,
-      required: true,
-    },
-    overlayImageOpacity: {
-      type: Number,
+    result: {
+      type: Object,
       required: true,
     },
   },
@@ -93,15 +81,15 @@ export default {
     calcScaling() {
       if (this.width !== undefined && this.height !== undefined) {
         if (this.width >= this.height) {
-          return calcScale.basedOnWidth(this.width, this.baseImage)
+          return calcScale.basedOnWidth(this.width, this.result.baseImage)
         } else {
-          return calcScale.basedOnHeight(this.height, this.baseImage)
+          return calcScale.basedOnHeight(this.height, this.result.baseImage)
         }
       } else {
         if (this.width !== undefined) {
-          return calcScale.basedOnWidth(this.width, this.baseImage)
+          return calcScale.basedOnWidth(this.width, this.result.baseImage)
         } else {
-          return calcScale.basedOnHeight(this.height, this.baseImage)
+          return calcScale.basedOnHeight(this.height, this.result.baseImage)
         }
       }
     },
@@ -114,14 +102,14 @@ export default {
     },
     overlayImageConfig() {
       return {
-        image: this.overlayImage,
-        visible: this.isOverlayImageVisible,
-        opacity: this.overlayImageOpacity,
+        image: this.result.overlayImage,
+        visible: this.result.options.overlayImage.visible,
+        opacity: this.result.options.overlayImage.opacity,
       }
     },
     baseImageConfig() {
       return {
-        image: this.baseImage,
+        image: this.result.baseImage,
       }
     },
   },
