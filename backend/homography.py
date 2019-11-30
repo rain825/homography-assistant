@@ -26,16 +26,24 @@ def projective_transform(img, points_img, points_another, width, height):
         射影変換結果画像 (BGRA カラー画像)
     """
     
+    # Convert image
+    if img.ndim == 2:
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGRA)
+    elif img.ndim == 3:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2BGRA)
+
     # Convert to numpy.ndarray
     points_img = np.float32(points_img)
     points_another = np.float32(points_another)
 
     # 射影変換行列を計算
     M, mask = cv2.findHomography(points_img, points_another, 0)
-
-    transformed = cv2.cvtColor(
-        cv2.warpPerspective(img, M, (width, height)),
-        cv2.COLOR_BGR2BGRA
+    
+    transformed = cv2.warpPerspective(
+        img,
+        M,
+        (width, height),
+        borderMode=cv2.BORDER_TRANSPARENT
     )
 
     return transformed
