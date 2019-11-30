@@ -3,7 +3,7 @@
     <div id="app" ref="app">
       <div class="tool">
         <h1>homography-assistant</h1>
-        <process-controller @send="handleSend" v-model="resultCanvas.options" />
+        <process-controller @send="handleSend" v-model="resultCanvas" />
       </div>
       <div class="selector-wrapper">
         <points-selector id="img-1" ref="img1" />
@@ -11,9 +11,9 @@
       </div>
       <result-canvas
         ref="resultCanvas"
-        :result="resultCanvas"
-        :width="this.$refs.app.clientWidth"
-        v-if="resultCanvas.overlayImage !== null"
+        :config="resultCanvas"
+        :width="canvasWidth"
+        v-if="resultCanvas.overlayImage.image !== null"
       />
     </div>
   </div>
@@ -34,17 +34,28 @@ export default {
   },
   data() {
     return {
+      isMouted: false,
       resultCanvas: {
-        overlayImage: null,
-        baseImage: null,
-        options: {
-          overlayImage: {
-            visible: true,
-            opacity: 1.0,
-          },
+        overlayImage: {
+          image: null,
+          visible: true,
+          opacity: 1.0,
+        },
+        baseImage: {
+          image: null,
+          visible: true,
+          opacity: 1.0,
         },
       },
     }
+  },
+  mounted() {
+    this.isMounted = true
+  },
+  computed: {
+    canvasWidth() {
+      return this.isMounted ? this.$refs.app.clientWidth : undefined
+    },
   },
   methods: {
     extractCoordinatesFromPoints(points) {
@@ -96,10 +107,10 @@ export default {
           const image = new Image()
 
           image.onload = () => {
-            this.resultCanvas.overlayImage = image
+            this.resultCanvas.overlayImage.image = image
           }
           image.src = resp.data["img"]
-          this.resultCanvas.baseImage = baseImage.$data.image
+          this.resultCanvas.baseImage.image = baseImage.$data.image
         })
         .catch(error => {
           console.error(error)
