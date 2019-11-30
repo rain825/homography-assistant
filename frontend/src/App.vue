@@ -3,13 +3,7 @@
     <div id="app" ref="app">
       <div class="tool">
         <h1>homography-assistant</h1>
-        <process-controller
-          @send="handleSend"
-          @changeVisible="handleChangeOverlayImageVisible"
-          :isOverlayImageVisible="isOverlayImageVisible"
-          :overlayImageOpacity="overlayImageOpacity"
-          @sliderChange="handleOverlayImageOpacityChange"
-        />
+        <process-controller @send="handleSend" v-model="resultCanvas.options" />
       </div>
       <div class="selector-wrapper">
         <points-selector id="img-1" ref="img1" />
@@ -17,12 +11,12 @@
       </div>
       <result-canvas
         ref="resultCanvas"
-        :overlayImage="overlayImage"
-        :baseImage="baseImage"
+        :overlayImage="resultCanvas.overlayImage"
+        :baseImage="resultCanvas.baseImage"
         :width="this.$refs.app.clientWidth"
-        :isOverlayImageVisible="isOverlayImageVisible"
-        :overlayImageOpacity="overlayImageOpacity"
-        v-if="overlayImage !== null"
+        :isOverlayImageVisible="resultCanvas.options.overlayImage.visible"
+        :overlayImageOpacity="resultCanvas.options.overlayImage.opacity"
+        v-if="resultCanvas.overlayImage !== null"
       />
     </div>
   </div>
@@ -43,10 +37,16 @@ export default {
   },
   data() {
     return {
-      overlayImage: null,
-      baseImage: null,
-      isOverlayImageVisible: true,
-      overlayImageOpacity: 1.0,
+      resultCanvas: {
+        overlayImage: null,
+        baseImage: null,
+        options: {
+          overlayImage: {
+            visible: true,
+            opacity: 1.0,
+          },
+        },
+      },
     }
   },
   methods: {
@@ -88,19 +88,12 @@ export default {
           console.debug(resp.data)
           const image = new Image()
           image.onload = () => {
-            this.overlayImage = image
+            this.resultCanvas.overlayImage = image
           }
           image.src = resp.data["img"]
-          this.baseImage = this.$refs.img2.$data.image
+          this.resultCanvas.baseImage = this.$refs.img2.$data.image
         })
         .catch(error => console.debug(error))
-    },
-    handleChangeOverlayImageVisible() {
-      // 射影変換画像の表示/非表示切り替え
-      this.isOverlayImageVisible = !this.isOverlayImageVisible
-    },
-    handleOverlayImageOpacityChange(opacity) {
-      this.overlayImageOpacity = opacity
     },
   },
 }
