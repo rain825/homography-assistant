@@ -1,18 +1,19 @@
 <template>
-  <div id="app">
-    <div class="tool">
-      <h1>homography-assistant</h1>
-      <process-controller @send="handleSend" />
-    </div>
-    <div class="selector-wrapper">
-      <points-selector id="img-1" ref="img1" />
-      <points-selector id="img-2" ref="img2" />
-    </div>
-    <div>
-      <image-canvas
-        :image="resultImage"
-        :width="this.$el.clientWidth"
-        v-if="resultImage !== null"
+  <div class="app-wrapper">
+    <div id="app" ref="app">
+      <div class="tool">
+        <h1>homography-assistant</h1>
+        <process-controller @send="handleSend" v-model="resultCanvas.options" />
+      </div>
+      <div class="selector-wrapper">
+        <points-selector id="img-1" ref="img1" />
+        <points-selector id="img-2" ref="img2" />
+      </div>
+      <result-canvas
+        ref="resultCanvas"
+        :result="resultCanvas"
+        :width="this.$refs.app.clientWidth"
+        v-if="resultCanvas.overlayImage !== null"
       />
     </div>
   </div>
@@ -21,7 +22,7 @@
 <script>
 import PointsSelector from "./components/PointsSelector.vue"
 import ProcessController from "./components/ProcessController.vue"
-import ImageCanvas from "./components/ImageCanvas.vue"
+import ResultCanvas from "./components/ResultCanvas.vue"
 import axios from "axios"
 
 export default {
@@ -29,12 +30,20 @@ export default {
   components: {
     PointsSelector,
     ProcessController,
-    ImageCanvas,
+    ResultCanvas,
   },
   data() {
     return {
-      resultImage: null,
-      resultImageWidth: null,
+      resultCanvas: {
+        overlayImage: null,
+        baseImage: null,
+        options: {
+          overlayImage: {
+            visible: true,
+            opacity: 1.0,
+          },
+        },
+      },
     }
   },
   methods: {
@@ -64,8 +73,6 @@ export default {
       console.debug(`send: ${JSON.stringify(pointsA)}`)
       console.debug(`send: ${JSON.stringify(pointsB)}`)
 
-      // どちらに変換するかによって変更
-      this.resultImageWidth = this.$refs.img2.$data.image.naturalWidth
       axios
         .post("/api", {
           pointsA: pointsA,
@@ -78,9 +85,10 @@ export default {
           console.debug(resp.data)
           const image = new Image()
           image.onload = () => {
-            this.resultImage = image
+            this.resultCanvas.overlayImage = image
           }
           image.src = resp.data["img"]
+          this.resultCanvas.baseImage = this.$refs.img2.$data.image
         })
         .catch(error => console.debug(error))
     },
@@ -92,6 +100,13 @@ export default {
 html,
 body {
   height: 100%;
+}
+
+.app-wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 0px 16px;
+  box-sizing: border-box;
 }
 
 #app {
@@ -113,7 +128,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: flex-start;
 }
 </style>
