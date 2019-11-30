@@ -97,7 +97,6 @@ export default {
       this.$emit("scaling", this.konva.stage.scaleX())
 
       this.$nextTick(() => {
-        console.debug("Update Canvas")
         this.konva.stage.batchDraw()
       })
     },
