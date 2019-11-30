@@ -34,6 +34,7 @@ export default {
   },
   mounted() {
     this.isMounted = true
+    this.$emit("scaling", this.konva.stage.scaleX())
   },
   computed: {
     stage() {
@@ -90,9 +91,15 @@ export default {
     },
     handleWheel(event) {
       event.evt.preventDefault()
+
       this.cursorCenteredScaling(event.evt.deltaY, this.scrollScale)
 
-      this.$nextTick(() => this.konva.stage.batchDraw())
+      this.$emit("scaling", this.konva.stage.scaleX())
+
+      this.$nextTick(() => {
+        console.debug("Update Canvas")
+        this.konva.stage.batchDraw()
+      })
     },
   },
 }
