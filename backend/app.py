@@ -1,9 +1,34 @@
+from base64 import b64decode, b64encode
 from flask import Flask, render_template, request, jsonify
-import json
-import numpy as np
-import base64
-import homography
+
 import cv2
+import numpy as np
+
+from homography import projective_transform
+
+
+def data_url_to_ndarray(data_url):
+    b64_data = data_url.split(",")[1]
+
+    return cv2.imdecode(
+        np.frombuffer(
+            b64decode(b64_data),
+            dtype=np.uint8
+        ),
+        cv2.IMREAD_ANYCOLOR
+    )
+
+
+def ndarray_to_data_url(img):
+    PREFIX = "data:image/png;base64"
+
+    return ",".join([
+        PREFIX,
+        b64encode(
+            cv2.imencode(".png", img)[1],
+        ).decode("ascii")
+    ])
+
 
 app = Flask(
     __name__,
@@ -22,31 +47,23 @@ def api_endpoint():
     try:
         if request.method == "GET":
             return "びゅー"
+        
         elif request.method == "POST":
-            data = request.get_json()
-            transformImg = homography.projectiveTransform(data["pointsA"], data["pointsB"], base64ToMat(
-                data["img"]), data["width"], data["height"])
-            sendData = {"img": "data:image/png;base64," +
-                        matTobase64(transformImg)}
-            return jsonify(sendData)
+            args = request.get_json()
+
+            args["img"] = data_url_to_ndarray(args["img"])
+
+            result = projective_transform(**args)
+            
+            return jsonify({
+                "img": ndarray_to_data_url(result)
+            })
+    
     except Exception as e:
-        return str(e)
-
-
-def base64ToMat(base64str):
-    imgBinary = base64.b64decode(base64str)
-    imgNp = np.frombuffer(imgBinary, np.uint8)
-    imgMat = cv2.imdecode(imgNp, cv2.IMREAD_ANYCOLOR)
-
-    return imgMat
-
-
-def matTobase64(img):
-    result, imgData = cv2.imencode(".png", img)
-    imgBase64 = base64.b64encode(imgData).decode("ascii")
-
-    return imgBase64
+        response = jsonify({"message": str(e)})
+        response.status_code = 500
+        return response
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5050)
+    app.run(debug=True, port=5000)

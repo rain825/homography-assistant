@@ -1,46 +1,43 @@
 import cv2
 import numpy as np
-import sys
 
 
-def projectiveTransform(pointA, pointB, imgA, imgBWitdh, imgBHeight):
+def projective_transform(img, points_img, points_another, width, height):
     """
-        画像Aを画像Bの対応点に重なるように射影変換
-
-      Args:
-          pointA (array): 画像Aの対応点
-          pointB (array): 画像Bの対応点
-          imgA (numpy uint8): 変換する画像(画像A)。8bit3ch(BGR)を想定
-          imgBWidth (int): 画像Bの幅
-          imgBHeight (int): 画像Bの高さ
-
-      Returns:
-          numpy uint8: 射影変換した画像。BGRA
-
+    2画像間で射影変換を行う
+    
+    Parameters
+    ----------
+    img : numpy.ndarray
+        入力画像
+    
+    points_img: list of lists
+        画像 `img` における対応点
+    
+    points_another : list of lists
+        もう一方の画像における対応点
+    
+    width, height : int
+        生成される画像の大きさ
+    
+    Returns
+    -------
+    numpy.ndarray
+        射影変換結果画像 (BGRA カラー画像)
     """
-    whiteImg = np.full(imgA.shape[::-1][1:], 255, np.uint8)
+    
+    # Convert to numpy.ndarray
+    points_img = np.float32(points_img)
+    points_another = np.float32(points_another)
 
-    ptsA = np.float32(pointA)
-    ptsB = np.float32(pointB)
+    # 射影変換行列を計算
+    M, mask = cv2.findHomography(points_img, points_another, 0)
 
-# 射影変換行列を計算
-    M, mask = cv2.findHomography(ptsA, ptsB, 0)
+    transformed = cv2.cvtColor(
+        cv2.warpPerspective(img, M, (width, height)),
+        cv2.COLOR_BGR2BGRA
+    )
 
-    transformImg = cv2.warpPerspective(imgA, M, (imgBWitdh, imgBHeight))
-    alphaCh = cv2.warpPerspective(whiteImg, M, (imgBWitdh, imgBHeight))
-
-    b, g, r = cv2.split(transformImg)
-    img_bgra = cv2.merge((b, g, r, alphaCh))
-
-    return img_bgra
+    return transformed
 
 
-# dubug code
-# 400 * 400 -> 500 * 500でテスト
-if __name__ == '__main__':
-    imgPath = sys.argv[1]
-    img = cv2.imread(imgPath)
-    ptsA = [[0, 0], [399, 0], [399, 399], [0, 399]]
-    ptsB = [[249, 0], [499, 249], [249, 499], [100, 249]]
-    transformImg = projectiveTransform(ptsA, ptsB, img, 500, 500)
-    cv2.imwrite("test.png", transformImg)
