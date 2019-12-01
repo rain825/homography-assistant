@@ -42,6 +42,7 @@ export default {
     },
     handleChangeVisible() {
       this.$emit("change", {
+        ...this.values,
         overlayImage: {
           ...this.values.overlayImage,
           visible: !this.values.overlayImage.visible,
@@ -50,6 +51,7 @@ export default {
     },
     handleSliderChange(event) {
       this.$emit("change", {
+        ...this.values,
         overlayImage: {
           ...this.values.overlayImage,
           opacity: Number(event.target.value),

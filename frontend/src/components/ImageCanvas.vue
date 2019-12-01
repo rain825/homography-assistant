@@ -1,44 +1,38 @@
 <template>
   <div class="image-canvas">
-    <v-stage
-      class="stage"
-      :style="stageStyle"
-      :config="stageConfig"
-      @wheel="handleWheelOnCanvas"
-      ref="stage"
-    >
-      <v-layer :config="layerConfig" ref="layer">
-        <v-image
-          :config="imgConfig"
-          ref="image"
-          @mouseenter="handleMouseEnterOnImage"
-          @mouseleave="handleMouseLeaveOnImage"
-          @click="handleImageClick"
-        ></v-image>
+    <scalable-stage :scale="scale" ref="stage">
+      <v-image
+        :config="imgConfig"
+        ref="image"
+        @mouseenter="handleMouseEnterOnImage"
+        @mouseleave="handleMouseLeaveOnImage"
+        @click="handleImageClick"
+      ></v-image>
 
-        <point
-          v-for="(point, index) in points"
-          :idx="index"
-          :key="point.id"
-          :pos="point.pos"
-          :color="point.color"
-          :scale="pointScale"
-          @drag="handleDragOnPoint"
-        ></point>
-      </v-layer>
-    </v-stage>
+      <point
+        v-for="(point, index) in points"
+        :idx="index"
+        :key="point.id"
+        :pos="point.pos"
+        :color="point.color"
+        :scale="1 / konva.stage.scaleX()"
+        @drag="handleDragOnPoint"
+      ></point>
+    </scalable-stage>
   </div>
 </template>
 
 <script>
-import { calcScale } from "@/utils/scaling.js"
+import { calcScaling } from "@/utils/scaling.js"
 import { pointsValidator } from "@/utils/validator"
 
 import Point from "@/components/canvas/Point.vue"
+import ScalableStage from "@/components/canvas/ScalableStage.vue"
 
 export default {
   name: "ImageCanvas",
   components: {
+    ScalableStage,
     Point,
   },
   props: {
@@ -62,94 +56,42 @@ export default {
   },
   data() {
     return {
+      isCursorOnImage: false,
       isMounted: false,
-      pointScale: 1.0,
-      layerConfig: {
-        draggable: true,
-      },
       imgConfig: {
         image: this.image,
       },
-      isCursorOnImage: false,
+      layerConfig: {
+        draggable: true,
+      },
     }
   },
   mounted() {
     this.isMounted = true
   },
   computed: {
-    kStage() {
-      return this.isMounted ? this.$refs.stage.getStage() : undefined
+    scale() {
+      return calcScaling({
+        width: this.width,
+        height: this.height,
+        image: this.image,
+      })
     },
-    kLayer() {
-      return this.isMounted ? this.$refs.layer.getStage() : undefined
-    },
-    kImage() {
-      return this.isMounted ? this.$refs.image.getStage() : undefined
-    },
-    stageConfig() {
-      const scale = this.calcScaling
-      return {
-        width: scale.size.canvas.width,
-        height: scale.size.canvas.height,
-        scale: {
-          x: scale.ratio,
-          y: scale.ratio,
-        },
-      }
-    },
-    calcScaling() {
-      if (this.width !== undefined && this.height !== undefined) {
-        if (this.width >= this.height) {
-          return calcScale.basedOnWidth(this.width, this.image)
-        } else {
-          return calcScale.basedOnHeight(this.height, this.image)
-        }
-      } else {
-        if (this.width !== undefined) {
-          return calcScale.basedOnWidth(this.width, this.image)
-        } else {
-          return calcScale.basedOnHeight(this.height, this.image)
-        }
-      }
-    },
-    stageStyle() {
-      const scale = this.calcScaling
-      return {
-        width: `${parseInt(scale.size.canvas.width)}px`,
-        height: `${parseInt(scale.size.canvas.height)}px`,
-      }
+    konva() {
+      return this.isMounted ? this.$refs.stage.konva : undefined
     },
   },
   methods: {
-    cursorCenteredScaling(wheelDelta, scaleBy) {
-      const prevScale = this.kStage.scaleX()
-      const prevCursor = this.kStage.getPointerPosition()
-      const prevPosition = this.kStage.position()
+    cursorPosInImage() {
+      console.log("cursorPosInImage")
+      const { stage, layer } = this.konva
 
-      const mousePointTo = {
-        x: prevCursor.x / prevScale - prevPosition.x / prevScale,
-        y: prevCursor.y / prevScale - prevPosition.y / prevScale,
-      }
-
-      const newScale =
-        wheelDelta > 0 ? prevScale * scaleBy : prevScale / scaleBy
-
-      this.kStage.scale({ x: newScale, y: newScale })
-
-      const newCursor = this.kStage.getPointerPosition()
-
-      var newPos = {
-        x: -(mousePointTo.x - newCursor.x / newScale) * newScale,
-        y: -(mousePointTo.y - newCursor.y / newScale) * newScale,
-      }
-      this.kStage.position(newPos)
-    },
-    calCurrentCursorPosInImage() {
-      const cursorPos = this.kStage.getPointerPosition()
-      const stagePos = this.kStage.position()
-      const layerPos = this.kLayer.position()
-      const layerScale = this.kLayer.scale()
-      const stageScale = this.kStage.scale()
+      const cursorPos = stage.getPointerPosition()
+      console.debug(`cursorPos: ${JSON.stringify(cursorPos)}`)
+      const stagePos = stage.position()
+      const layerPos = layer.position()
+      const layerScale = layer.scale()
+      const stageScale = stage.scale()
 
       const scale = {
         x: layerScale.x / stageScale.x,
@@ -168,15 +110,6 @@ export default {
 
       return fixedCursorPos
     },
-    handleWheelOnCanvas(event) {
-      const scaleBy = 1.2
-      event.evt.preventDefault()
-      this.cursorCenteredScaling(event.evt.deltaY, scaleBy)
-
-      this.pointScale = 1 / this.kStage.scaleX()
-
-      this.kStage.batchDraw()
-    },
     handleMouseEnterOnImage() {
       this.isCursorOnImage = true
     },
@@ -184,12 +117,13 @@ export default {
       this.isCursorOnImage = false
     },
     handleImageClick() {
-      const pos = this.calCurrentCursorPosInImage()
+      const cursorPos = this.cursorPosInImage()
 
-      console.debug(`handleImageClick@ImageCanvas <pos=${JSON.stringify(pos)}>`)
-      this.$emit("add-point", pos)
+      console.debug(
+        `handleImageClick@ImageCanvas <cursorPos=${JSON.stringify(cursorPos)}>`
+      )
+      this.$emit("add-point", cursorPos)
     },
-
     handleDragOnPoint(idx, newPos) {
       console.debug(
         `handleDragOnPoint@ImageCanvas <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`

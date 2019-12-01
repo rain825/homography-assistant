@@ -21,7 +21,8 @@
 </template>
 
 <script>
-import chroma from "chroma-js"
+import { pickColorWithBG } from "@/utils/colors.js"
+
 import ImageCanvas from "@/components/ImageCanvas.vue"
 import FileUploader from "@/components/FileUploader.vue"
 import DraggableList from "@/components/DraggableList.vue"
@@ -45,29 +46,16 @@ export default {
     this.canvasWidth = this.$el.clientWidth
   },
   methods: {
-    generateRandomColor() {
-      const bg = chroma.random()
-      const fg =
-        chroma.contrast("white", bg) > chroma.contrast("black", bg)
-          ? chroma("white")
-          : chroma("black")
-
-      return {
-        bg: bg.hex(),
-        fg: fg.hex(),
-      }
-    },
     handleSubmit(image) {
       this.uploadable = false
       this.image = image
     },
     handleAddPoint(pos) {
+      const id = this.points.length
+      const color = pickColorWithBG(id)
+
       console.debug(`handleAddPoint <pos=${JSON.stringify(pos)}}>`)
-      this.points.push({
-        id: this.points.length,
-        pos: pos,
-        color: this.generateRandomColor(),
-      })
+      this.points.push({ id, pos, color })
     },
     handleDragPoint(idx, newPos) {
       console.debug(
