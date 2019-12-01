@@ -1,13 +1,20 @@
 <template>
-  <div class="controller-wrapper">
-    <div class="button" @click="handleClick">transform</div>
-    <div class="button" @click="handleChangeVisible">
+  <div class="toolbar-wrapper">
+    <div class="button" @click="handleTransform">Transform</div>
+    <div
+      :class="{ button: true, disabled: !available }"
+      @click="handleChangeVisible"
+    >
       {{ this.values.overlayImage.visible ? "Hide" : "Show" }}
+    </div>
+    <div :class="{ button: true, disabled: !available }" @click="handleExport">
+      Export
     </div>
     <input
       type="range"
       v-bind="opacitySlider"
       v-model="opacitySlider.value"
+      :disabled="!available"
       @input="handleSliderChange"
     />
   </div>
@@ -15,7 +22,7 @@
 
 <script>
 export default {
-  name: "ProccessController",
+  name: "Toolbar",
   model: {
     prop: "values",
     event: "change",
@@ -36,11 +43,24 @@ export default {
       },
     }
   },
+  computed: {
+    available() {
+      return (
+        this.values.overlayImage.image !== null ||
+        this.values.baseImage.image !== null
+      )
+    },
+  },
   methods: {
-    handleClick() {
+    handleTransform() {
       this.$emit("send")
     },
+    handleExport() {
+      this.$emit("show-modal")
+    },
     handleChangeVisible() {
+      if (!this.available) return
+
       this.$emit("change", {
         ...this.values,
         overlayImage: {
@@ -63,18 +83,29 @@ export default {
 </script>
 
 <style scoped>
-.controller-wrapper {
+.toolbar-wrapper {
   margin: 0px 16px;
   display: flex;
   flex-direction: row;
 }
-.controller-wrapper .button {
+.toolbar-wrapper .button {
+  width: 100px;
+  text-align: center;
   padding: 8px;
   color: white;
-  background-color: blue;
+  background-color: rgba(32, 32, 255, 0.8);
+  border: 3px solid rgb(4, 4, 64);
   margin: 8px;
+  cursor: pointer;
+  font-weight: bold;
 }
-.controller-wrapper .button:hover {
+.toolbar-wrapper .button:not(.disabled):hover {
   background-color: #333;
+}
+.toolbar-wrapper .button.disabled {
+  font-weight: normal;
+  background-color: #333;
+  color: #aaa;
+  cursor: default;
 }
 </style>
