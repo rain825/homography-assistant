@@ -1,6 +1,12 @@
 <template>
-  <div class="drop-area" @dragleave.prevent @dragover.prevent @drop.prevent.stop="handleSubmit">
-    <label :class="{ overlay: canvasVisible }">
+  <div
+    class="drop-area"
+    @dragenter.prevent="handleEnterDropArea"
+    @dragleave.prevent="handleLeaveDropArea"
+    @dragover.prevent
+    @drop.prevent.stop="handleSubmit"
+  >
+    <label :class="{ overlay: canvasVisible, inDropArea: isInDropArea}">
       <div class="message">Click here or drop file to open image</div>
       <input @change="handleSubmit" name="imgFile" ref="file" style="display:none;" type="file" />
     </label>
@@ -15,7 +21,25 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      dropAreaCounter: 0,
+      isInDropArea: false
+    };
+  },
   methods: {
+    handleEnterDropArea() {
+      this.dropAreaCounter++;
+      this.isInDropArea = true;
+      console.debug(`enterDropArea:${this.dropAreaCounter}`);
+    },
+    handleLeaveDropArea() {
+      this.dropAreaCounter--;
+      if (this.dropAreaCounter === 0) {
+        this.isInDropArea = false;
+      }
+      console.debug(`leaveDropArea:${this.dropAreaCounter}`);
+    },
     handleSubmit(event) {
       const file = this.$refs.file.files[0] || event.dataTransfer.files[0];
       const fileReader = new FileReader();
@@ -52,6 +76,10 @@ label {
 }
 label:hover {
   background-color: rgba(64, 128, 255, 0.3);
+}
+
+.inDropArea {
+  background-color: rgba(64, 255, 121, 0.3);
 }
 .overlay {
   position: absolute;
