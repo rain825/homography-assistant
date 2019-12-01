@@ -41,7 +41,9 @@ export default {
       console.debug(`leaveDropArea:${this.dropAreaCounter}`);
     },
     handleSubmit(event) {
-      const file = this.$refs.file.files[0] || event.dataTransfer.files[0];
+      const file = event.target.files
+        ? event.target.files[0]
+        : event.dataTransfer.files[0];
       const fileReader = new FileReader();
 
       fileReader.onload = event => {
