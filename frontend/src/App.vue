@@ -3,7 +3,11 @@
     <div id="app" ref="app">
       <div class="toolbar">
         <h1>homography-assistant</h1>
-        <process-controller @send="handleSend" v-model="resultCanvas" />
+        <toolbar
+          @show-modal="showModal"
+          @send="handleSend"
+          v-model="resultCanvas"
+        />
       </div>
       <div class="main-window">
         <div class="selector-wrapper">
@@ -17,25 +21,33 @@
         ></result-canvas>
       </div>
     </div>
+    <file-export-modal
+      :visible="visibleExportModal"
+      :points="points"
+      @close="visibleExportModal = false"
+    ></file-export-modal>
   </div>
 </template>
 
 <script>
 import PointsSelector from "./components/PointsSelector.vue"
-import ProcessController from "./components/ProcessController.vue"
+import Toolbar from "./components/Toolbar.vue"
 import ResultCanvas from "./components/ResultCanvas.vue"
+import FileExportModal from "./components/FileExportModal.vue"
 import axios from "axios"
 
 export default {
   name: "app",
   components: {
     PointsSelector,
-    ProcessController,
+    Toolbar,
     ResultCanvas,
+    FileExportModal,
   },
   data() {
     return {
-      isMouted: false,
+      isMounted: false,
+      visibleExportModal: false,
       resultCanvas: {
         overlayImage: {
           image: null,
@@ -57,15 +69,22 @@ export default {
     canvasWidth() {
       return this.isMounted ? this.$refs.app.clientWidth : undefined
     },
+    points() {
+      return this.isMounted
+        ? [this.$refs.img1.points, this.$refs.img2.points]
+        : Array()
+    },
+    transformAvailable() {
+      return this.isMounted ? this.checkPoints() : false
+    },
   },
   methods: {
     extractCoordinatesFromPoints(points) {
       return points.map(point => Object.values(point.pos))
     },
-    checkPoints() {
-      const pointsA = this.extractCoordinatesFromPoints(this.$refs.img1.points)
 
-      const pointsB = this.extractCoordinatesFromPoints(this.$refs.img2.points)
+    checkPoints() {
+      const [pointsA, pointsB] = this.points
 
       if (pointsA.length < 4 || pointsB.length < 4) {
         console.debug(`PointsA and PointsB require at least 4 items`)
@@ -110,6 +129,11 @@ export default {
           console.error(error.response.data)
         })
     },
+    showModal() {
+      if (!this.checkPoints()) return
+
+      this.visibleExportModal = true
+    },
   },
 }
 </script>
@@ -127,6 +151,7 @@ body {
   height: 100%;
   padding: 8px 8px;
   box-sizing: border-box;
+  position: relative;
 }
 #app {
   width: 100%;
