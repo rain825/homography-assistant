@@ -3,20 +3,22 @@
     <div class="image-container" ref="wrapper">
       <file-uploader
         @submit="handleSubmit"
-        :canvas-visible="image !== null"
+        :canvas-visible="imageCanvas.image !== null"
         v-if="uploadable"
       ></file-uploader>
 
       <image-canvas
         @add-point="handleAddPoint"
         @drag-point="handleDragPoint"
-        :width="canvasWidth"
-        :image="image"
-        :points="points"
-        v-if="image !== null"
+        v-bind="imageCanvas"
+        v-if="imageCanvas.image !== null"
       ></image-canvas>
     </div>
-    <draggable-list :points="points" @swap="handleListSwap"></draggable-list>
+    <draggable-list
+      class="draggable-list"
+      :points="imageCanvas.points"
+      @swap="handleListSwap"
+    ></draggable-list>
   </div>
 </template>
 
@@ -37,13 +39,51 @@ export default {
   data() {
     return {
       uploadable: true,
-      image: null,
-      canvasWidth: null,
-      points: [],
+      imageCanvas: {
+        image: null,
+        width: null,
+        height: null,
+        points: [],
+      },
     }
   },
+  computed: {
+    image: {
+      get() {
+        return this.imageCanvas.image
+      },
+      set(newValue) {
+        return this.$set(this.imageCanvas, "image", newValue)
+      },
+    },
+    width: {
+      get() {
+        return this.imageCanvas.width
+      },
+      set(newValue) {
+        return this.$set(this.imageCanvas, "width", newValue)
+      },
+    },
+    height: {
+      get() {
+        return this.imageCanvas.height
+      },
+      set(newValue) {
+        return this.$set(this.imageCanvas, "height", newValue)
+      },
+    },
+    points: {
+      get() {
+        return this.imageCanvas.points
+      },
+      set(newValue) {
+        return this.$set(this.imageCanvas, "points", newValue)
+      },
+    },
+  },
   mounted() {
-    this.canvasWidth = this.$el.clientWidth
+    this.width = this.$refs.wrapper.clientWidth
+    this.height = this.$refs.wrapper.clientHeight
   },
   methods: {
     handleSubmit(image) {
@@ -51,18 +91,20 @@ export default {
       this.image = image
     },
     handleAddPoint(pos) {
-      const id = this.points.length
+      const points = this.points
+
+      const id = points.length
       const color = pickColorWithBG(id)
 
       console.debug(`handleAddPoint <pos=${JSON.stringify(pos)}}>`)
-      this.points.push({ id, pos, color })
+      points.push({ id, pos, color })
     },
     handleDragPoint(idx, newPos) {
+      const points = this.points
+
       console.debug(
         `handleDragOnPoint <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`
       )
-
-      const points = this.points
 
       points.splice(idx, 1, {
         ...points[idx],
@@ -81,17 +123,23 @@ export default {
 
 <style scoped>
 .points-selector {
-  width: 45%;
+  width: 100%;
+  box-sizing: content-box;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   border: 5px solid red;
 }
 .image-container {
-  width: 100%;
-  height: fit-content;
+  width: 68%;
+  height: 100%;
   position: relative;
+  box-sizing: border-box;
+}
+.draggable-list {
+  width: 32%;
+  height: 100%;
   box-sizing: border-box;
 }
 </style>
