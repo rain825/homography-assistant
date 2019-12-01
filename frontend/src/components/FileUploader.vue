@@ -41,7 +41,6 @@ export default {
 <style scoped>
 label {
   width: 100%;
-  min-height: 500px;
   height: 100%;
   padding: 18px;
   background-color: transparent;
