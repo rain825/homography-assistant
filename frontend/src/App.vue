@@ -22,9 +22,9 @@
       </div>
     </div>
     <file-export-modal
-      :visible="visibleExportModal"
+      :visible="isVisibleExportModal"
       :points="points"
-      @close="visibleExportModal = false"
+      @close="isVisibleExportModal = false"
     ></file-export-modal>
   </div>
 </template>
@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       isMounted: false,
-      visibleExportModal: false,
+      isVisibleExportModal: false,
       resultCanvas: {
         overlayImage: {
           image: null,
@@ -132,7 +132,7 @@ export default {
     showModal() {
       if (!this.checkPoints()) return
 
-      this.visibleExportModal = true
+      this.isVisibleExportModal = true
     },
   },
 }
