@@ -6,7 +6,7 @@
     @dragover.prevent
     @drop.prevent.stop="handleSubmit"
   >
-    <label :class="{ overlay: canvasVisible, inDropArea: isInDropArea}">
+    <label :class="{ overlay: canvasVisible, 'in-drop-area': isInDropArea}">
       <div class="message">Click here or drop file to open image</div>
       <input @change="handleSubmit" name="imgFile" ref="file" style="display:none;" type="file" />
     </label>
@@ -80,7 +80,7 @@ label:hover {
   background-color: rgba(64, 128, 255, 0.3);
 }
 
-.inDropArea {
+.in-drop-area {
   background-color: rgba(64, 255, 121, 0.3);
 }
 .overlay {
