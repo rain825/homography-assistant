@@ -1,7 +1,7 @@
 <template>
   <div class="drop-area" @dragleave.prevent @dragover.prevent @drop.prevent.stop="handleSubmit">
     <label :class="{ overlay: canvasVisible }">
-      <div class="message">Click here to open image</div>
+      <div class="message">Click here or drop file to open image</div>
       <input @change="handleSubmit" name="imgFile" ref="file" style="display:none;" type="file" />
     </label>
   </div>
