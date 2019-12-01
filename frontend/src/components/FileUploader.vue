@@ -1,14 +1,10 @@
 <template>
-  <label :class="{ overlay: canvasVisible }">
-    <div class="message">Click here to open image</div>
-    <input
-      @change="handleSubmit"
-      name="imgFile"
-      ref="file"
-      style="display:none;"
-      type="file"
-    />
-  </label>
+  <div class="drop-area" @dragleave.prevent @dragover.prevent @drop.prevent.stop="handleSubmit">
+    <label :class="{ overlay: canvasVisible }">
+      <div class="message">Click here to open image</div>
+      <input @change="handleSubmit" name="imgFile" ref="file" style="display:none;" type="file" />
+    </label>
+  </div>
 </template>
 
 <script>
@@ -16,25 +12,25 @@ export default {
   props: {
     canvasVisible: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
   methods: {
-    handleSubmit() {
-      const file = this.$refs.file.files[0]
-      const fileReader = new FileReader()
+    handleSubmit(event) {
+      const file = this.$refs.file.files[0] || event.dataTransfer.files[0];
+      const fileReader = new FileReader();
 
       fileReader.onload = event => {
-        const image = new Image()
+        const image = new Image();
         image.onload = () => {
-          this.$emit("submit", image)
-        }
-        image.src = event.target.result
-      }
-      fileReader.readAsDataURL(file)
-    },
-  },
-}
+          this.$emit("submit", image);
+        };
+        image.src = event.target.result;
+      };
+      fileReader.readAsDataURL(file);
+    }
+  }
+};
 </script>
 
 <style scoped>
