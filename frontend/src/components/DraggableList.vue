@@ -60,14 +60,14 @@ export default {
 
 <style scoped>
 .draggable-wrapper {
-  max-height: 17em;
   overflow: scroll;
   width: 100%;
+  height: 100%;
   border: 3px solid blue;
 }
 .item-wrapper {
   height: 2em;
-  font-size: 1.6em;
+  font-size: 1.4em;
   padding: 0.5ex 1ex;
   margin: 10px;
   font-weight: 400;

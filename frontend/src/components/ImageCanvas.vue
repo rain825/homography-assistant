@@ -1,6 +1,10 @@
 <template>
   <div class="image-canvas">
-    <scalable-stage :scale="scale" @scaling="handleScaleChange" ref="stage">
+    <scalable-stage
+      :config="stageConfig"
+      @scaling="handleScaleChange"
+      ref="stage"
+    >
       <v-image
         :config="imgConfig"
         ref="image"
@@ -23,7 +27,7 @@
 </template>
 
 <script>
-import { calcScaling } from "@/utils/scaling.js"
+import { calcScalableStageConfig } from "@/utils/configs.js"
 import { pointsValidator } from "@/utils/validator"
 
 import Point from "@/components/canvas/Point.vue"
@@ -71,8 +75,8 @@ export default {
     this.isMounted = true
   },
   computed: {
-    scale() {
-      return calcScaling({
+    stageConfig() {
+      return calcScalableStageConfig({
         width: this.width,
         height: this.height,
         image: this.image,
@@ -132,7 +136,7 @@ export default {
       this.$emit("drag-point", idx, newPos)
     },
     handleScaleChange(newScale) {
-      this.pointScale = newScale
+      this.pointScale = newScale.x
     },
   },
 }

@@ -13,45 +13,45 @@
 </template>
 
 <script>
-import { scalingValidator } from "@/utils/validator.js"
+import { scalableStageConfigValidator } from "@/utils/validator.js"
 export default {
   name: "ScalableStage",
   props: {
-    scale: {
+    config: {
       type: Object,
       required: true,
-      validator: scalingValidator,
+      validator: scalableStageConfigValidator,
     },
   },
   data() {
     return {
       isMounted: false,
+      scrollScale: 1.2,
       layerConfig: {
         draggable: true,
       },
-      scrollScale: 1.2,
+      stageScale: null,
     }
+  },
+  created() {
+    this.stageScale = this.config.scale
   },
   mounted() {
     this.isMounted = true
-    this.$emit("scaling", this.konva.stage.scaleX())
+    this.$emit("scaling", this.stageScale)
   },
   computed: {
     stage() {
-      const scale = this.scale
+      const config = this.config
 
       return {
         style: {
-          width: `${parseInt(scale.size.canvas.width)}px`,
-          height: `${parseInt(scale.size.canvas.height)}px`,
+          width: `${parseInt(config.width)}px`,
+          height: `${parseInt(config.height)}px`,
         },
         config: {
-          width: scale.size.canvas.width,
-          height: scale.size.canvas.height,
-          scale: {
-            x: scale.ratio,
-            y: scale.ratio,
-          },
+          ...config,
+          scale: this.stageScale,
         },
       }
     },
@@ -83,7 +83,7 @@ export default {
 
       const newCursor = stage.getPointerPosition()
 
-      var newPos = {
+      const newPos = {
         x: -(mousePointTo.x - newCursor.x / newScale) * newScale,
         y: -(mousePointTo.y - newCursor.y / newScale) * newScale,
       }
@@ -94,7 +94,8 @@ export default {
 
       this.cursorCenteredScaling(event.evt.deltaY, this.scrollScale)
 
-      this.$emit("scaling", this.konva.stage.scaleX())
+      this.stageScale = this.konva.stage.scale()
+      this.$emit("scaling", this.stageScale)
 
       this.$nextTick(() => {
         this.konva.stage.batchDraw()

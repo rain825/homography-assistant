@@ -5,16 +5,17 @@ export function pointsValidator(points) {
   )
 }
 
-export function scalingValidator(scaling) {
+export function scalableStageConfigValidator(config) {
+  // return {
+  //   width: width,
+  //   height: image.naturalHeight * ratio,
+  //   scale: {
+  //     x: ratio,
+  //     y: ratio,
+  //   },
+  // }
   return (
-    ["ratio", "size"].every(key => key in scaling) &&
-    ["image", "canvas"].every(key => key in scaling.size) &&
-    ["native", "scaled"].every(key => key in scaling.size.image) &&
-    ["width", "height"].every(key => key in scaling.size.image.native) &&
-    [
-      scaling.size.image.native,
-      scaling.size.image.scaled,
-      scaling.size.canvas,
-    ].every(object => ["width", "height"].every(key => key in object))
+    ["width", "height", "scale"].every(key => key in config) &&
+    ["x", "y"].every(key => key in config.scale)
   )
 }
