@@ -1,6 +1,11 @@
 <template>
   <div id="result-canvas" class="result-canvas">
-    <scalable-stage :scale="scale">
+    <scalable-stage
+      :config="stageConfig"
+      v-if="
+        config.baseImage.image !== null && config.overlayImage.image !== null
+      "
+    >
       <v-image
         id="base-image"
         :config="config.baseImage"
@@ -17,7 +22,7 @@
 
 <script>
 import ScalableStage from "@/components/canvas/ScalableStage.vue"
-import { calcScaling } from "@/utils/scaling.js"
+import { calcScalableStageConfig } from "@/utils/configs.js"
 
 export default {
   name: "ResultCanvas",
@@ -25,14 +30,6 @@ export default {
     ScalableStage,
   },
   props: {
-    width: {
-      type: Number,
-      required: false,
-    },
-    height: {
-      type: Number,
-      required: false,
-    },
     config: {
       type: Object,
       required: true,
@@ -40,20 +37,22 @@ export default {
   },
   data() {
     return {
-      isMounted: false,
       layerConfig: {
         draggable: true,
       },
+      stageSize: null,
     }
   },
   mounted() {
-    this.isMounted = true
+    this.stageSize = {
+      width: this.$el.clientWidth,
+      height: this.$el.clientHeight,
+    }
   },
   computed: {
-    scale() {
-      return calcScaling({
-        width: this.width,
-        height: this.height,
+    stageConfig() {
+      return calcScalableStageConfig({
+        ...this.stageSize,
         image: this.config.baseImage.image,
       })
     },
@@ -63,7 +62,6 @@ export default {
 
 <style scoped>
 .result-canvas {
-  width: 100%;
-  position: relative;
+  height: 100%;
 }
 </style>
