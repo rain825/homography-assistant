@@ -1,9 +1,8 @@
 <template>
-  <label :class="{ overlay: canvasVisible }" for="file">
+  <label :class="{ overlay: canvasVisible }">
     <div class="message">Click here to open image</div>
     <input
       @change="handleSubmit"
-      id="file"
       name="imgFile"
       ref="file"
       style="display:none;"
