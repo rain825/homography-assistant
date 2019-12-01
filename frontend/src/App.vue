@@ -1,20 +1,21 @@
 <template>
   <div class="app-wrapper">
     <div id="app" ref="app">
-      <div class="tool">
+      <div class="toolbar">
         <h1>homography-assistant</h1>
         <process-controller @send="handleSend" v-model="resultCanvas" />
       </div>
-      <div class="selector-wrapper">
-        <points-selector id="img-1" ref="img1" />
-        <points-selector id="img-2" ref="img2" />
+      <div class="main-window">
+        <div class="selector-wrapper">
+          <points-selector class="selector" id="img-1" ref="img1" />
+          <points-selector class="selector" id="img-2" ref="img2" />
+        </div>
+        <result-canvas
+          class="result-canvas"
+          ref="resultCanvas"
+          :config="resultCanvas"
+        ></result-canvas>
       </div>
-      <result-canvas
-        ref="resultCanvas"
-        :config="resultCanvas"
-        :width="canvasWidth"
-        v-if="resultCanvas.overlayImage.image !== null"
-      />
     </div>
   </div>
 </template>
@@ -62,13 +63,9 @@ export default {
       return points.map(point => Object.values(point.pos))
     },
     checkPoints() {
-      const pointsA = this.extractCoordinatesFromPoints(
-        this.$refs.img1.$data.points
-      )
+      const pointsA = this.extractCoordinatesFromPoints(this.$refs.img1.points)
 
-      const pointsB = this.extractCoordinatesFromPoints(
-        this.$refs.img2.$data.points
-      )
+      const pointsB = this.extractCoordinatesFromPoints(this.$refs.img2.points)
 
       if (pointsA.length < 4 || pointsB.length < 4) {
         console.debug(`PointsA and PointsB require at least 4 items`)
@@ -92,15 +89,11 @@ export default {
 
       axios
         .post("/api", {
-          img: overlayImage.$data.image.src,
-          points_img: this.extractCoordinatesFromPoints(
-            overlayImage.$data.points
-          ),
-          points_another: this.extractCoordinatesFromPoints(
-            baseImage.$data.points
-          ),
-          width: baseImage.$data.image.naturalWidth,
-          height: baseImage.$data.image.naturalHeight,
+          img: overlayImage.image.src,
+          points_img: this.extractCoordinatesFromPoints(overlayImage.points),
+          points_another: this.extractCoordinatesFromPoints(baseImage.points),
+          width: baseImage.image.naturalWidth,
+          height: baseImage.image.naturalHeight,
         })
         .then(resp => {
           console.debug(resp.data)
@@ -110,7 +103,7 @@ export default {
             this.resultCanvas.overlayImage.image = image
           }
           image.src = resp.data["img"]
-          this.resultCanvas.baseImage.image = baseImage.$data.image
+          this.resultCanvas.baseImage.image = baseImage.image
         })
         .catch(error => {
           console.error(error)
@@ -126,14 +119,15 @@ html,
 body {
   height: 100%;
 }
-
+body {
+  margin: 0;
+}
 .app-wrapper {
   width: 100%;
   height: 100%;
-  padding: 0px 16px;
+  padding: 8px 8px;
   box-sizing: border-box;
 }
-
 #app {
   width: 100%;
   height: 100%;
@@ -142,18 +136,40 @@ body {
   justify-content: flex-start;
   align-items: flex-start;
 }
-.tool {
+.toolbar {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
 }
-.selector-wrapper {
+.tool h1 {
+  margin: 0px;
+}
+.main-window {
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
+}
+.selector-wrapper {
+  width: 49%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.selector {
+  height: 48%;
+}
+.result-canvas {
+  border: 5px solid blue;
+  box-sizing: border-box;
+  width: 49%;
+  height: 100%;
 }
 </style>
