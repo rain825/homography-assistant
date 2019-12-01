@@ -1,15 +1,15 @@
 <template>
-  <div
-    class="drop-area"
-    @dragenter.prevent="handleEnterDropArea"
-    @dragleave.prevent="handleLeaveDropArea"
-    @dragover.prevent
-    @drop.prevent.stop="handleSubmit"
-  >
-    <label :class="{ overlay: canvasVisible, 'in-drop-area': isInDropArea}">
-      <div class="message">Click here or drop file to open image</div>
+  <div class="file-uploader">
+    <label
+      :class="{ overlay: canvasVisible, 'in-drop-area': isInDropArea}"
+      @dragenter.prevent="handleEnterDropArea"
+      @dragleave.prevent="handleLeaveDropArea"
+      @dragover.prevent
+      @drop.prevent.stop="handleSubmit"
+    >
       <input @change="handleSubmit" name="imgFile" ref="file" style="display:none;" type="file" />
     </label>
+    <div class="message">Click here or drop file to open image</div>
   </div>
 </template>
 
@@ -29,16 +29,12 @@ export default {
   },
   methods: {
     handleEnterDropArea() {
-      this.dropAreaCounter++;
       this.isInDropArea = true;
-      console.debug(`enterDropArea:${this.dropAreaCounter}`);
+      console.debug(`enterDropArea:${this.isInDropArea}`);
     },
     handleLeaveDropArea() {
-      this.dropAreaCounter--;
-      if (this.dropAreaCounter === 0) {
-        this.isInDropArea = false;
-      }
-      console.debug(`leaveDropArea:${this.dropAreaCounter}`);
+      this.isInDropArea = false;
+      console.debug(`leaveDropArea:${this.isInDropArea}`);
     },
     handleSubmit(event) {
       const file = event.target.files
@@ -60,21 +56,27 @@ export default {
 </script>
 
 <style scoped>
-label {
+.file-uploader {
   width: 100%;
-  min-height: 500px;
-  height: 100%;
-  padding: 18px;
-  background-color: transparent;
-  color: black;
+  height: 400px;
+  /* padding: 18px; */
   box-sizing: border-box;
   outline: 5px dotted #222;
   outline-offset: -12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+}
+
+label {
+  width: 100%;
+  height: 100%;
+  padding: 18px;
+  background-color: transparent;
+  box-sizing: border-box;
+  color: black;
+  display: block;
   transition-property: all;
   transition: 0.1s;
+  position: absolute;
+  z-index: 0;
 }
 label:hover {
   background-color: rgba(64, 128, 255, 0.3);
@@ -86,11 +88,18 @@ label:hover {
 .overlay {
   position: absolute;
   top: 0px;
-  z-index: 10;
+  z-index: 0;
 }
 .message {
-  /* line-height: 20rem; */
   font-size: 1.5rem;
   font-weight: bold;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  position: absolute;
+  z-index: -10;
 }
 </style>
