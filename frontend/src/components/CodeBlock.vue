@@ -1,7 +1,10 @@
 <template>
   <div class="code-block">
     <!-- Code Block -->
-    <div class="header" @click="handleDownload">{{ name }}</div>
+    <div class="header" @click="handleDownload">
+      <file-icon class="icon"></file-icon>
+      <span class="file-name">{{ name }}</span>
+    </div>
     <highlight-code lang="json" class="code">
       {{ asString }}
     </highlight-code>
@@ -13,15 +16,23 @@
 </template>
 
 <script>
+import FileIcon from "@/assets/octicons/file.svg"
 import "highlight.js/styles/github-gist.css"
 
 export default {
   name: "CodeBlock",
+  components: {
+    FileIcon,
+  },
   data() {
     return {
       name: "points.json",
       codes: {
         points_a: [
+          { id: 0, x: 123, y: 456 },
+          { id: 1, x: 111, y: 222 },
+        ],
+        points_: [
           { id: 0, x: 123, y: 456 },
           { id: 1, x: 111, y: 222 },
         ],
@@ -72,55 +83,40 @@ export default {
 
 <style scoped>
 .code-block {
+  --font-size: 1.2em;
   /* offset-x | offset-y | blur-radius | color */
-  box-shadow: 5px 5px 10px black;
-  border: 1px solid lightgray;
-
-  position: relative;
+  border: 0.2em solid gray;
+  padding: 1em 1em;
+  font-size: var(--font-size);
+  border-radius: 1em;
+  background-color: white;
 }
 .code {
   margin: 0px;
-  padding: 2em 0.5em;
-}
-.header::before {
-  content: "</";
-  font-size: 1.5em;
-  padding-right: 0.2em;
-  color: red;
-}
-.header::after {
-  content: ">";
-  font-size: 1.5em;
-  padding-left: 0.2em;
-  color: red;
+  height: calc(10 * var(--font-size));
+  overflow: scroll;
 }
 .header {
+  height: var(--font-size);
   font-weight: bold;
-  height: 16px;
-  font-size: 1em;
-  padding: 0.2em 0.5em;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-end;
   font-family: monospace;
-  background-color: white;
-  position: absolute;
-  top: 0px;
-  left: 0px;
+  margin-bottom: 0.8em;
+  color: green;
+  fill: green;
 }
 .header:hover {
   text-decoration: underline;
-  color: cornflowerblue;
-  text-decoration-color: cornflowerblue;
+  color: lightseagreen;
+  fill: lightseagreen;
+  text-decoration-color: lightseagreen;
 }
-.header:hover::before {
-  text-decoration: none;
-  color: cornflowerblue;
-  text-decoration-color: cornflowerblue;
-}
-.header:hover::after {
-  text-decoration: none;
-  color: cornflowerblue;
-  text-decoration-color: cornflowerblue;
+.icon {
+  height: inherit;
+  width: auto;
+  margin-right: 0.2em;
+  fill: inherit;
 }
 </style>
