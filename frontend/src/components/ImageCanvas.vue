@@ -1,6 +1,6 @@
 <template>
   <div class="image-canvas">
-    <scalable-stage :scale="scale" ref="stage">
+    <scalable-stage :scale="scale" @scaling="handleScaleChange" ref="stage">
       <v-image
         :config="imgConfig"
         ref="image"
@@ -15,7 +15,7 @@
         :key="point.id"
         :pos="point.pos"
         :color="point.color"
-        :scale="1 / konva.stage.scaleX()"
+        :scale="1 / pointScale"
         @drag="handleDragOnPoint"
       ></point>
     </scalable-stage>
@@ -64,6 +64,7 @@ export default {
       layerConfig: {
         draggable: true,
       },
+      pointScale: 1.0,
     }
   },
   mounted() {
@@ -129,6 +130,9 @@ export default {
         `handleDragOnPoint@ImageCanvas <idx=${idx}, newPos=(${newPos.x}, ${newPos.y})>`
       )
       this.$emit("drag-point", idx, newPos)
+    },
+    handleScaleChange(newScale) {
+      this.pointScale = newScale
     },
   },
 }
