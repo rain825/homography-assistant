@@ -58,7 +58,7 @@ export default {
 <style scoped>
 .file-uploader {
   width: 100%;
-  height: 400px;
+  height: 100%;
   /* padding: 18px; */
   box-sizing: border-box;
   outline: 5px dotted #222;
@@ -95,6 +95,8 @@ label:hover {
   font-weight: bold;
   width: 100%;
   height: 100%;
+  padding: 18px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
