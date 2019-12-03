@@ -95,6 +95,8 @@ label:hover {
   font-weight: bold;
   width: 100%;
   height: 100%;
+  padding: 18px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
