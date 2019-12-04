@@ -39,6 +39,12 @@ export default {
   mounted() {
     this.isMounted = true
     this.$emit("scaling", this.stageScale)
+    window.addEventListener("resize", () => {
+      this.konva.stage.size({
+        width: this.$parent.$el.clientWidth,
+        height: this.$parent.$el.clientHeight,
+      })
+    })
   },
   computed: {
     stage() {
