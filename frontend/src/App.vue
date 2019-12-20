@@ -66,9 +66,6 @@ export default {
     this.isMounted = true
   },
   computed: {
-    canvasWidth() {
-      return this.isMounted ? this.$refs.app.clientWidth : undefined
-    },
     points() {
       return this.isMounted
         ? [this.$refs.img1.points, this.$refs.img2.points]

@@ -49,6 +49,9 @@ export default {
     }
   },
   computed: {
+    text() {
+      return `${this.$vnode.key}`
+    },
     scaledCircleConfig() {
       const scale = this.scale || 1.0
       const base = this.baseConfig.circle
@@ -65,7 +68,7 @@ export default {
 
       return {
         fontSize: base.fontSize * scale,
-        x: -(scaledRadius * 0.4),
+        x: -(scaledRadius * this.text.length * 0.4),
         y: -(scaledRadius * 0.5),
       }
     },
@@ -87,7 +90,7 @@ export default {
     },
     textConfig() {
       return {
-        text: `${this.$vnode.key}`,
+        text: this.text,
         fill: this.color.fg,
         ...this.scaledTextConfig,
       }
