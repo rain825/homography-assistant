@@ -18,41 +18,41 @@ export default {
   props: {
     canvasVisible: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       dropAreaCounter: 0,
-      isInDropArea: false
-    };
+      isInDropArea: false,
+    }
   },
   methods: {
     handleEnterDropArea() {
-      this.isInDropArea = true;
-      console.debug(`enterDropArea:${this.isInDropArea}`);
+      this.isInDropArea = true
+      console.debug(`enterDropArea:${this.isInDropArea}`)
     },
     handleLeaveDropArea() {
-      this.isInDropArea = false;
-      console.debug(`leaveDropArea:${this.isInDropArea}`);
+      this.isInDropArea = false
+      console.debug(`leaveDropArea:${this.isInDropArea}`)
     },
     handleSubmit(event) {
       const file = event.target.files
         ? event.target.files[0]
-        : event.dataTransfer.files[0];
-      const fileReader = new FileReader();
+        : event.dataTransfer.files[0]
+      const fileReader = new FileReader()
 
       fileReader.onload = event => {
-        const image = new Image();
+        const image = new Image()
         image.onload = () => {
-          this.$emit("submit", image);
-        };
-        image.src = event.target.result;
-      };
-      fileReader.readAsDataURL(file);
-    }
-  }
-};
+          this.$emit("submit", image)
+        }
+        image.src = event.target.result
+      }
+      fileReader.readAsDataURL(file)
+    },
+  },
+}
 </script>
 
 <style scoped>

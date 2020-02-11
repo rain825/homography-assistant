@@ -1,11 +1,7 @@
 <template>
   <div class="points-selector">
     <div class="image-container" ref="wrapper">
-      <file-uploader
-        @submit="handleSubmit"
-        :canvas-visible="imageCanvas.image !== null"
-        v-if="uploadable"
-      ></file-uploader>
+      <file-uploader :canvas-visible="imageCanvas.image !== null" @submit="handleSubmit" v-if="uploadable"></file-uploader>
 
       <image-canvas
         @add-point="handleAddPoint"
@@ -14,11 +10,7 @@
         v-if="imageCanvas.image !== null"
       ></image-canvas>
     </div>
-    <draggable-list
-      class="draggable-list"
-      :points="imageCanvas.points"
-      @swap="handleListSwap"
-    ></draggable-list>
+    <points-list :points="imageCanvas.points" @delete="handleDeletePoint" @swap="handleListSwap" class="points-list"></points-list>
   </div>
 </template>
 
@@ -27,14 +19,14 @@ import { pickColorWithBG } from "@/utils/colors.js"
 
 import ImageCanvas from "@/components/ImageCanvas.vue"
 import FileUploader from "@/components/FileUploader.vue"
-import DraggableList from "@/components/DraggableList.vue"
+import PointsList from "@/components/points-list/PointsList.vue"
 
 export default {
   name: "PointsSelector",
   components: {
     ImageCanvas,
     FileUploader,
-    DraggableList,
+    PointsList,
   },
   data() {
     return {
@@ -99,6 +91,16 @@ export default {
       console.debug(`handleAddPoint <pos=${JSON.stringify(pos)}}>`)
       points.push({ id, pos, color })
     },
+    handleDeletePoint(id) {
+      const points = this.points
+      const idx = points.findIndex(elem => elem.id == id)
+      console.debug(`handleDeletePoint <id=${id}>`)
+      if (idx != -1) {
+        points.splice(idx, 1)
+      } else {
+        console.error(`Error! -- cannot find point (id=${id})`)
+      }
+    },
     handleDragPoint(idx, newPos) {
       const points = this.points
 
@@ -137,7 +139,7 @@ export default {
   position: relative;
   box-sizing: border-box;
 }
-.draggable-list {
+.points-list {
   width: 32%;
   height: 100%;
   box-sizing: border-box;
