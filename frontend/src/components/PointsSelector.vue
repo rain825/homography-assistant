@@ -1,7 +1,11 @@
 <template>
   <div class="points-selector">
     <div class="image-container" ref="wrapper">
-      <file-uploader :canvas-visible="imageCanvas.image !== null" @submit="handleSubmit" v-if="uploadable"></file-uploader>
+      <file-uploader
+        :canvas-visible="imageCanvas.image !== null"
+        @submit="handleSubmit"
+        v-if="uploadable"
+      ></file-uploader>
 
       <image-canvas
         @add-point="handleAddPoint"
@@ -10,7 +14,12 @@
         v-if="imageCanvas.image !== null"
       ></image-canvas>
     </div>
-    <points-list :points="imageCanvas.points" @delete="handleDeletePoint" @swap="handleListSwap" class="points-list"></points-list>
+    <points-list
+      :points="imageCanvas.points"
+      @delete="handleDeletePoint"
+      @swap="handleListSwap"
+      class="points-list"
+    ></points-list>
   </div>
 </template>
 
@@ -72,6 +81,11 @@ export default {
         return this.$set(this.imageCanvas, "points", newValue)
       },
     },
+    maxIdInPoints() {
+      return this.points.length == 0
+        ? 0
+        : this.points.map(point => point.id).reduce((a, b) => (a > b ? a : b))
+    },
   },
   mounted() {
     this.width = this.$refs.wrapper.clientWidth
@@ -85,7 +99,7 @@ export default {
     handleAddPoint(pos) {
       const points = this.points
 
-      const id = points.length
+      const id = this.maxIdInPoints + 1
       const color = pickColorWithBG(id)
 
       console.debug(`handleAddPoint <pos=${JSON.stringify(pos)}}>`)
@@ -93,7 +107,7 @@ export default {
     },
     handleDeletePoint(id) {
       const points = this.points
-      const idx = points.findIndex(elem => elem.id == id)
+      const idx = points.findIndex(point => point.id == id)
       console.debug(`handleDeletePoint <id=${id}>`)
       if (idx != -1) {
         points.splice(idx, 1)
