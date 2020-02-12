@@ -4,8 +4,8 @@
       <div class="toolbar">
         <h1>homography-assistant</h1>
         <toolbar
-          @show-modal="showModal"
           @send="handleSend"
+          @show-modal="showModal"
           v-model="resultCanvas"
         />
       </div>
@@ -15,15 +15,15 @@
           <points-selector class="selector" id="img-2" ref="img2" />
         </div>
         <result-canvas
+          :config="resultCanvas"
           class="result-canvas"
           ref="resultCanvas"
-          :config="resultCanvas"
         ></result-canvas>
       </div>
     </div>
     <file-export-modal
-      :visible="isVisibleExportModal"
       :points="points"
+      :visible="isVisibleExportModal"
       @close="isVisibleExportModal = false"
     ></file-export-modal>
   </div>
@@ -160,6 +160,7 @@ body {
 }
 .toolbar {
   width: 100%;
+  height: 8%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -170,7 +171,7 @@ body {
 }
 .main-window {
   width: 100%;
-  height: 100%;
+  height: 92%;
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
