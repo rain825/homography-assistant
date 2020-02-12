@@ -1,15 +1,16 @@
 {
+  // ESLint 有効化
   "eslint.enable": true,
-  "eslint.autoFixOnSave": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    {
-      "language": "vue",
-      "autoFix": true
-    }
-  ],
+  // ファイル保存時にフォーマットするように
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  // Webpack の '@' エイリアスの補完に対応
   "path-intellisense.mappings": {
     "@": "${workspaceRoot}/frontend/src",
-},
+  },
+  // Vetur 内蔵のフォーマット機能を無効化
+  // - ESLint と干渉するため
+  "vetur.format.defaultFormatter.js": "none",
+  "vetur.format.defaultFormatter.html": "none",
 }
