@@ -7,20 +7,20 @@
     >
       <v-image
         :config="imgConfig"
-        ref="image"
+        @click="handleImageClick"
         @mouseenter="handleMouseEnterOnImage"
         @mouseleave="handleMouseLeaveOnImage"
-        @click="handleImageClick"
+        ref="image"
       ></v-image>
 
       <point
-        v-for="(point, index) in points"
+        :color="point.color"
         :idx="index"
         :key="point.id"
         :pos="point.pos"
-        :color="point.color"
         :scale="1 / pointScale"
         @drag="handleDragOnPoint"
+        v-for="(point, index) in points"
       ></point>
     </scalable-stage>
   </div>
@@ -144,6 +144,8 @@ export default {
 
 <style scoped>
 .image-canvas {
+  width: 100%;
+  height: 100%;
   position: relative;
 }
 </style>
