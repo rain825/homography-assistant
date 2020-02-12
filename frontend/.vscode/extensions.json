@@ -2,5 +2,6 @@
   "recommendations": [
     "octref.vetur",
     "dbaeumer.vscode-eslint",
+    "christian-kohler.path-intellisense"
   ]
 }
