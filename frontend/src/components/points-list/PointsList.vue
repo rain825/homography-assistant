@@ -8,7 +8,12 @@
       v-bind="options"
     >
       <transition-group :name="!drag ? 'flip-list' : null" type="transition">
-        <list-item :key="point.id" :point="point" @delete="handleDelete" v-for="point in points"></list-item>
+        <list-item
+          :key="point.id"
+          :point="point"
+          @delete="handleDelete"
+          v-for="point in points"
+        ></list-item>
       </transition-group>
     </draggable>
   </div>
