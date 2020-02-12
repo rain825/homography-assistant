@@ -1,9 +1,9 @@
 <template>
   <v-stage
-    class="stage"
-    :style="stage.style"
     :config="stage.config"
+    :style="stage.style"
     @wheel="handleWheel"
+    class="stage"
     ref="stage"
   >
     <v-layer :config="layerConfig" ref="layer">
