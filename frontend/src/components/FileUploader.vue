@@ -1,13 +1,19 @@
 <template>
   <div class="file-uploader">
     <label
-      :class="{ overlay: canvasVisible, 'in-drop-area': isInDropArea}"
+      :class="{ overlay: canvasVisible, 'in-drop-area': isInDropArea }"
       @dragenter.prevent="handleEnterDropArea"
       @dragleave.prevent="handleLeaveDropArea"
       @dragover.prevent
       @drop.prevent.stop="handleSubmit"
     >
-      <input @change="handleSubmit" name="imgFile" ref="file" style="display:none;" type="file" />
+      <input
+        @change="handleSubmit"
+        name="imgFile"
+        ref="file"
+        style="display:none;"
+        type="file"
+      />
     </label>
     <div class="message">Click here or drop file to open image</div>
   </div>
