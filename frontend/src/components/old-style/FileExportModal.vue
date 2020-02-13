@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import CodeBlock from "@/components/CodeBlock.vue"
+import CodeBlock from "./CodeBlock.vue"
 
 export default {
   name: "FileExportModal",

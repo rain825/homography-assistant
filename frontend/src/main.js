@@ -1,6 +1,6 @@
 import Vue from "vue"
-import App from "./test.vue"
-// import App from "./App.vue"
+// import App from "./test.vue"
+import App from "./components/old-style/App.vue"
 
 import VueKonva from "vue-konva"
 

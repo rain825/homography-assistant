@@ -30,10 +30,10 @@
 </template>
 
 <script>
-import PointsSelector from "./components/PointsSelector.vue"
-import Toolbar from "./components/Toolbar.vue"
-import ResultCanvas from "./components/ResultCanvas.vue"
-import FileExportModal from "./components/FileExportModal.vue"
+import PointsSelector from "./PointsSelector.vue"
+import Toolbar from "./Toolbar.vue"
+import ResultCanvas from "./ResultCanvas.vue"
+import FileExportModal from "./FileExportModal.vue"
 import axios from "axios"
 
 export default {

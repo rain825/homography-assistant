@@ -30,8 +30,8 @@
 import { calcScalableStageConfig } from "@/utils/configs.js"
 import { pointsValidator } from "@/utils/validator"
 
-import Point from "@/components/canvas/Point.vue"
-import ScalableStage from "@/components/canvas/ScalableStage.vue"
+import Point from "./canvas/Point.vue"
+import ScalableStage from "./canvas/ScalableStage.vue"
 
 export default {
   name: "ImageCanvas",

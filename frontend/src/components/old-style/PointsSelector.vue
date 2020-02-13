@@ -26,9 +26,9 @@
 <script>
 import { pickColorWithBG } from "@/utils/colors.js"
 
-import ImageCanvas from "@/components/ImageCanvas.vue"
-import FileUploader from "@/components/FileUploader.vue"
-import PointsList from "@/components/points-list/PointsList.vue"
+import ImageCanvas from "./ImageCanvas.vue"
+import FileUploader from "./FileUploader.vue"
+import PointsList from "./points-list/PointsList.vue"
 
 export default {
   name: "PointsSelector",

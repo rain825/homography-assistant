@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import ScalableStage from "@/components/canvas/ScalableStage.vue"
+import ScalableStage from "./canvas/ScalableStage.vue"
 import { calcScalableStageConfig } from "@/utils/configs.js"
 
 export default {
