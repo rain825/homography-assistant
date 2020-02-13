@@ -36,4 +36,5 @@ export default new Vuetify({
     locales: { ja },
     current: "ja",
   },
+  iconfont: "md",
 })
